@@ -6,7 +6,7 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Stili esistenti mantenuti */
+  /* Stili mantenuti */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
@@ -72,7 +72,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">Investor Hub <span>/ Toolio</span></div>
-    <span class="pill-founders" id="current-user-display">founder only</span>
+    <span class="pill-founders" id="current-user-display">Founder</span>
   </div>
   <button class="btn-add" onclick="openModal()">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
@@ -109,8 +109,8 @@
   <div class="modal">
     <h3 style="margin-bottom:20px">Nuovo investitore</h3>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="f-name" type="text"></div>
-      <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
+      <div class="form-group"><label class="form-label">Nome Investitore</label><input class="form-input" id="f-inv-name" type="text" placeholder="Es: Mario Rossi"></div>
+      <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text" placeholder="Es: Italian Angels"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
@@ -158,58 +158,26 @@
     }
   }
 
-  // Aggiorna stato nel DB e aggiorna la card visivamente SENZA chiuderla
   window.updateStatus = async function(selectEl, id, newStatus) {
     selectEl.disabled = true;
-    selectEl.style.opacity = '0.5';
-
     const inv = investors.find(i => i.id === id);
-    if (!inv) { selectEl.disabled = false; selectEl.style.opacity = '1'; return; }
+    let updatedFounders = [...inv.founders];
 
-    let updatedFounders = Array.isArray(inv.founders) ? [...inv.founders] : [];
-
-    // Aggiungi il founder corrente ai contatti se non già presente
     if ((newStatus === 'Contattato' || newStatus === 'Meeting avuto') && !updatedFounders.includes(currentUser)) {
       updatedFounders.push(currentUser);
     }
 
-    const { error } = await supabase
-      .from('investors')
-      .update({ status: newStatus, founders: updatedFounders })
-      .eq('id', id);
-
-    selectEl.disabled = false;
-    selectEl.style.opacity = '1';
+    const { error } = await supabase.from('investors').update({ status: newStatus, founders: updatedFounders }).eq('id', id);
 
     if (error) {
-      alert("Errore nell'aggiornamento: " + error.message);
-      selectEl.value = inv.status; // ripristina valore precedente
-      return;
+        alert("Errore: " + error.message);
+        selectEl.disabled = false;
+        return;
     }
 
-    // Aggiorna il dato in memoria
     inv.status = newStatus;
     inv.founders = updatedFounders;
-
-    // Aggiorna solo gli elementi visivi della card, senza chiuderla
-    const card = selectEl.closest('.investor-card');
-    if (card) {
-      const dot = card.querySelector('.dot');
-      const statusText = card.querySelector('.status-text');
-      const founderBubbles = card.querySelector('.founder-bubbles');
-
-      if (dot) dot.className = 'dot ' + (newStatus === 'Meeting avuto' ? 'dot-green' : newStatus === 'Contattato' ? 'dot-amber' : 'dot-gray');
-      if (statusText) statusText.textContent = newStatus;
-      if (founderBubbles) {
-        founderBubbles.innerHTML = updatedFounders.length > 0
-          ? updatedFounders.map(f => `<span class="fbubble">${f}</span>`).join('')
-          : '<span class="fbubble-none">—</span>';
-      }
-    }
-
-    // Aggiorna solo i contatori
-    document.getElementById('stat-contacted').textContent = investors.filter(i => i.status === 'Contattato' || i.status === 'Meeting avuto').length;
-    document.getElementById('stat-meeting').textContent   = investors.filter(i => i.status === 'Meeting avuto').length;
+    render(); // Re-renderizza per aggiornare i pallini e i contatori
   }
 
   function render() {
@@ -220,9 +188,9 @@
       (!fStatus || inv.status === fStatus)
     );
 
-    document.getElementById('stat-total').textContent     = investors.length;
-    document.getElementById('stat-contacted').textContent = investors.filter(i => i.status === 'Contattato' || i.status === 'Meeting avuto').length;
-    document.getElementById('stat-meeting').textContent   = investors.filter(i => i.status === 'Meeting avuto').length;
+    document.getElementById('stat-total').textContent = investors.length;
+    document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.length > 0).length;
+    document.getElementById('stat-meeting').textContent = investors.filter(i => i.status === 'Meeting avuto').length;
 
     const list = document.getElementById('list');
     list.innerHTML = filtered.map(inv => `
@@ -234,7 +202,7 @@
           <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
           <div class="status-chip">
             <span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : (inv.status === 'Contattato' ? 'dot-amber' : 'dot-gray')}"></span>
-            <span class="status-text">${inv.status}</span>
+            ${inv.status}
           </div>
         </div>
         <div class="card-detail" onclick="event.stopPropagation()">
@@ -257,22 +225,28 @@
   window.closeModal = () => document.getElementById('modal').classList.remove('open');
 
   window.addInvestor = async function() {
-    const name = document.getElementById('f-name').value;
-    const fund = document.getElementById('f-fund').value;
+    const invName = document.getElementById('f-inv-name').value.trim();
+    const fund = document.getElementById('f-fund').value.trim();
     const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim());
     
+    if (!invName || !fund) {
+        alert("Inserisci Nome e Fondo");
+        return;
+    }
+
     const { error } = await supabase.from('investors').insert([{
-      name, fund, 
+      name: invName, 
+      fund: fund, 
       stage: [document.getElementById('f-new-stage').value],
       sectors, 
       ticket: document.getElementById('f-ticket').value,
       status: 'Mai contattato',
-      founders: [], // All'inizio è vuoto, si popola quando si cambia stato
+      founders: [], 
       description: document.getElementById('f-note').value
     }]);
 
     if (!error) { window.closeModal(); loadInvestors(); }
-    else { alert("Errore nel salvataggio"); }
+    else { alert("Errore nel salvataggio: " + error.message); }
   };
 
   document.getElementById('search').addEventListener('input', render);
