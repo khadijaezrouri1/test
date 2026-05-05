@@ -89,10 +89,26 @@
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
     <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
   </div>
-  <select id="f-status-filter" onchange="render()">
-    <option value="">Miei contatti: Tutti</option>
-    <option value="Contattato">Solo Contattati da me</option>
-    <option value="Non contattato">Non contattati da me</option>
+  <select id="f-stage" onchange="render()">
+    <option value="">Tutti gli stage</option>
+    <option value="Pre-seed">Pre-seed</option>
+    <option value="Seed">Seed</option>
+    <option value="Series A">Series A</option>
+    <option value="Series B">Series B</option>
+  </select>
+  <select id="f-sector" onchange="render()">
+    <option value="">Tutti i settori</option>
+    <option value="Fintech">Fintech</option>
+    <option value="SaaS">SaaS</option>
+    <option value="Deeptech">Deeptech</option>
+    <option value="Climate">Climate</option>
+    <option value="Marketplace">Marketplace</option>
+    <option value="HealthTech">HealthTech</option>
+  </select>
+  <select id="f-status" onchange="render()">
+    <option value="">Tutte le interazioni</option>
+    <option value="Contattato">Contattato</option>
+    <option value="Mai contattato">Non contattato</option>
   </select>
   <div class="filter-count" id="filter-count"></div>
 </div>
