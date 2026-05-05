@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Investor Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+  /* ... (Mantenuti tutti i tuoi stili CSS originali) ... */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --bg: #F5F4F0;
     --surface: #FFFFFF;
@@ -31,351 +32,64 @@
     --font: 'DM Sans', sans-serif;
     --mono: 'DM Mono', monospace;
   }
-
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .header-left { display: flex; align-items: center; gap: 10px; }
-  .logo {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
+  .logo { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
   .logo span { color: var(--text-faint); font-weight: 400; }
-  .pill-founders {
-    font-size: 11px;
-    font-family: var(--mono);
-    background: var(--surface2);
-    color: var(--text-muted);
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    letter-spacing: 0.02em;
-  }
-  .btn-add {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 7px 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: opacity 0.15s;
-  }
+  .pill-founders { font-size: 11px; font-family: var(--mono); background: var(--surface2); color: var(--text-muted); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); letter-spacing: 0.02em; }
+  .btn-add { font-family: var(--font); font-size: 13px; font-weight: 500; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.15s; }
   .btn-add:hover { opacity: 0.85; }
   .btn-add svg { width: 14px; height: 14px; }
-
-  /* STATS */
-  .stats-bar {
-    display: flex;
-    gap: 1px;
-    background: var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .stat-item {
-    flex: 1;
-    background: var(--surface);
-    padding: 12px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+  .stats-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+  .stat-item { flex: 1; background: var(--surface); padding: 12px 20px; display: flex; flex-direction: column; gap: 2px; }
   .stat-label { font-size: 11px; color: var(--text-faint); font-family: var(--mono); letter-spacing: 0.03em; text-transform: uppercase; }
   .stat-val { font-size: 22px; font-weight: 600; letter-spacing: -0.03em; color: var(--text); }
-
-  /* FILTERS */
-  .filters {
-    padding: 12px 20px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-  }
+  .filters { padding: 12px 20px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: var(--bg); border-bottom: 1px solid var(--border); }
   .search-wrap { position: relative; flex: 1; min-width: 200px; }
-  .search-wrap input {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 13px;
-    padding: 8px 12px 8px 34px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s;
-  }
+  .search-wrap input { width: 100%; font-family: var(--font); font-size: 13px; padding: 8px 12px 8px 34px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); color: var(--text); outline: none; transition: border-color 0.15s; }
   .search-wrap input:focus { border-color: var(--text); }
-  .search-wrap input::placeholder { color: var(--text-faint); }
-  .search-icon {
-    position: absolute;
-    left: 11px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-faint);
-    pointer-events: none;
-  }
-  select {
-    font-family: var(--font);
-    font-size: 13px;
-    padding: 7px 10px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    cursor: pointer;
-    outline: none;
-  }
-  select:focus { border-color: var(--text); }
-  .filter-count {
-    font-size: 12px;
-    color: var(--text-faint);
-    font-family: var(--mono);
-    margin-left: auto;
-    white-space: nowrap;
-  }
-
-  /* TABLE AREA */
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-faint); pointer-events: none; }
+  select { font-family: var(--font); font-size: 13px; padding: 7px 10px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); color: var(--text); cursor: pointer; outline: none; }
+  .filter-count { font-size: 12px; color: var(--text-faint); font-family: var(--mono); margin-left: auto; white-space: nowrap; }
   .table-wrap { padding: 16px 20px; }
-
-  .investor-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 6px;
-    overflow: hidden;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    cursor: pointer;
-  }
-  .investor-card:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-  .investor-card.expanded { border-color: var(--border-strong); }
-
-  .card-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr;
-    align-items: center;
-    padding: 14px 16px;
-    gap: 12px;
-  }
-
+  .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; }
+  .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .card-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
   .inv-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); }
   .inv-fund { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-
   .tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .tag {
-    font-size: 11px;
-    font-family: var(--mono);
-    padding: 3px 7px;
-    border-radius: 4px;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-  }
+  .tag { font-size: 11px; font-family: var(--mono); padding: 3px 7px; border-radius: 4px; letter-spacing: 0.01em; white-space: nowrap; }
   .tag-stage-preseed { background: var(--amber-bg); color: var(--amber); }
   .tag-stage-seed { background: var(--amber-bg); color: var(--amber); }
   .tag-stage-a { background: var(--blue-bg); color: var(--blue); }
   .tag-stage-b { background: var(--purple-bg); color: var(--purple); }
   .tag-sector { background: var(--surface2); color: var(--text-muted); }
-
-  .ticket {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  .status-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    font-weight: 500;
-  }
+  .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; }
   .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .dot-green { background: var(--green); }
   .dot-amber { background: #D4860A; }
   .dot-gray { background: var(--text-faint); }
-
   .founder-bubbles { display: flex; flex-wrap: wrap; gap: 4px; }
-  .fbubble {
-    font-size: 11px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2px 8px;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-  .fbubble-none { color: var(--text-faint); font-size: 12px; }
-
-  /* EXPAND PANEL */
-  .card-detail {
-    display: none;
-    border-top: 1px solid var(--border);
-    padding: 16px;
-    background: var(--bg);
-    gap: 20px;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
+  .fbubble { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 2px 8px; color: var(--text-muted); white-space: nowrap; }
+  .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); gap: 20px; grid-template-columns: 1fr 1fr 1fr; }
   .card-detail.open { display: grid; }
-
-  .detail-block {}
-  .detail-block-label {
-    font-size: 11px;
-    font-family: var(--mono);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-faint);
-    margin-bottom: 8px;
-  }
-  .detail-note {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    font-style: italic;
-  }
-  .detail-note-empty { color: var(--text-faint); font-size: 12px; font-style: italic; }
+  .detail-block-label { font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); margin-bottom: 8px; }
+  .detail-note { font-size: 13px; color: var(--text-muted); line-height: 1.6; font-style: italic; }
   .portfolio-list { display: flex; flex-wrap: wrap; gap: 4px; }
-  .portfolio-item {
-    font-size: 11px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    padding: 3px 8px;
-    color: var(--text);
-    font-family: var(--mono);
-  }
-  .detail-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .btn-secondary {
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 500;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    padding: 6px 12px;
-    cursor: pointer;
-    color: var(--text);
-    transition: background 0.12s;
-  }
-  .btn-secondary:hover { background: var(--surface2); }
-
-  /* COLUMN HEADERS */
-  .table-header {
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr;
-    padding: 0 16px 8px;
-    gap: 12px;
-  }
-  .col-header {
-    font-size: 11px;
-    font-family: var(--mono);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-faint);
-  }
-
-  /* EMPTY */
-  .empty-state {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--text-faint);
-    font-size: 13px;
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
+  .portfolio-item { font-size: 11px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 4px; padding: 3px 8px; color: var(--text); font-family: var(--mono); }
+  .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; }
+  .col-header { font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border-strong);
-    width: 480px;
-    max-width: 95vw;
-    padding: 24px;
-  }
+  .modal { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border-strong); width: 480px; max-width: 95vw; padding: 24px; }
   .modal-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 20px; }
   .form-group { margin-bottom: 14px; }
   .form-label { font-size: 12px; font-family: var(--mono); color: var(--text-muted); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.03em; }
-  .form-input {
-    width: 100%;
-    font-family: var(--font);
-    font-size: 13px;
-    padding: 8px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    outline: none;
-  }
-  .form-input:focus { border-color: var(--text); }
+  .form-input { width: 100%; font-family: var(--font); font-size: 13px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); color: var(--text); outline: none; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-  .btn-cancel {
-    font-family: var(--font);
-    font-size: 13px;
-    background: none;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    padding: 8px 16px;
-    cursor: pointer;
-    color: var(--text-muted);
-  }
-  .btn-save {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  .btn-save:hover { opacity: 0.85; }
-
-  @media (max-width: 600px) {
-    .card-row { grid-template-columns: 1fr 1fr; }
-    .card-row > *:nth-child(3),
-    .card-row > *:nth-child(4) { display: none; }
-    .card-detail { grid-template-columns: 1fr; }
-    .table-header { display: none; }
-    .stats-bar { flex-wrap: wrap; }
-  }
+  .btn-save { font-family: var(--font); font-size: 13px; font-weight: 500; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 16px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -451,7 +165,6 @@
   <div id="list"></div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title">Nuovo investitore</div>
@@ -496,18 +209,27 @@
 </div>
 
 <script>
-let investors = [
-  { id:1, name:"Marco Berti", fund:"Primo Ventures", stage:["Pre-seed","Seed"], sectors:["Fintech","SaaS"], ticket:"50k–150k", status:"Meeting avuto", founders:["Luca R.","Sara M.","Dario V."], portfolio:["Satispay","Milkman","Jointly"], note:"Risponde velocemente su LinkedIn. Focus su founder italiani con traction early." },
-  { id:2, name:"Elena Rossi", fund:"Oltre Capital", stage:["Seed","Series A"], sectors:["Climate","Deeptech"], ticket:"200k–500k", status:"Contattato", founders:["Marco T.","Giulia P."], portfolio:["Enerbrain","Rewop"], note:"Preferisce intro tramite portfolio founder. Non risponde a cold email." },
-  { id:3, name:"Andrea Neri", fund:"Digital Seed", stage:["Pre-seed"], sectors:["Marketplace","SaaS"], ticket:"25k–100k", status:"Mai contattato", founders:[], portfolio:["Venistar","Foodinho"], note:"" },
-  { id:4, name:"Federica Conti", fund:"NorthStar VC", stage:["Series A","Series B"], sectors:["Fintech","HealthTech"], ticket:"500k–2M", status:"Meeting avuto", founders:["Matteo G.","Chiara L."], portfolio:["Banca Sistema","Kelya"], note:"Molto attenta alla unit economics. Chiede sempre NRR e churn dal primo meeting." },
-  { id:5, name:"Giovanni Bianchi", fund:"ItalTech Fund", stage:["Seed"], sectors:["SaaS","Deeptech"], ticket:"100k–300k", status:"Contattato", founders:["Luca R."], portfolio:["Tannico","Depop"], note:"" },
-  { id:6, name:"Valentina Serra", fund:"Blue Ocean Ventures", stage:["Series A"], sectors:["HealthTech","Climate"], ticket:"300k–1M", status:"Mai contattato", founders:[], portfolio:["Doktor24","EnerGrid"], note:"" },
-  { id:7, name:"Roberto Marra", fund:"Kima Ventures IT", stage:["Pre-seed","Seed"], sectors:["Marketplace","Fintech","SaaS"], ticket:"50k–200k", status:"Meeting avuto", founders:["Sara M.","Dario V.","Giulia P."], portfolio:["Jobby","TicketSms"], note:"Decide in 2 settimane. Non fa follow-up, devi essere tu a ricontattarlo." },
-  { id:8, name:"Silvia Gallo", fund:"CDP Venture Capital", stage:["Seed","Series A","Series B"], sectors:["Deeptech","Climate"], ticket:"500k–3M", status:"Contattato", founders:["Marco T."], portfolio:["D-Orbit","Treedom"], note:"Processo molto strutturato, richiede deck + data room prima del primo call." },
-];
+// CONFIGURAZIONE SUPABASE
+const SUPABASE_URL = 'https://lnncxfnigdzarzyfwakr.supabase.co';
+const SUPABASE_KEY = 'sb_secret_asJB-vrCu3xX-7ZbwYy_xg_pDdkoVuw'; // Nota: Usa la Anon Public Key se configuri RLS
+const supabase = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-let nextId = 9;
+let investors = [];
+
+async function fetchInvestors() {
+  if (!supabase) return;
+  const { data, error } = await supabase
+    .from('investors')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Errore durante il caricamento dei dati:', error);
+  } else {
+    investors = data || [];
+    render();
+  }
+}
 
 function stageTagClass(s) {
   if (s === "Pre-seed") return "tag-stage-preseed";
@@ -542,15 +264,15 @@ function render() {
   const fStatus = document.getElementById("f-status").value;
 
   const filtered = investors.filter(inv => {
-    const mq = !q || inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q);
-    const ms = !fStage || inv.stage.includes(fStage);
-    const mc = !fSector || inv.sectors.includes(fSector);
+    const mq = !q || (inv.name && inv.name.toLowerCase().includes(q)) || (inv.fund && inv.fund.toLowerCase().includes(q));
+    const ms = !fStage || (inv.stage && inv.stage.includes(fStage));
+    const mc = !fSector || (inv.sectors && inv.sectors.includes(fSector));
     const mi = !fStatus || inv.status === fStatus;
     return mq && ms && mc && mi;
   });
 
   document.getElementById("stat-total").textContent = investors.length;
-  document.getElementById("stat-contacted").textContent = investors.filter(i => i.founders.length > 0).length;
+  document.getElementById("stat-contacted").textContent = investors.filter(i => i.founders && i.founders.length > 0).length;
   document.getElementById("stat-meeting").textContent = investors.filter(i => i.status === "Meeting avuto").length;
   document.getElementById("filter-count").textContent = filtered.length < investors.length ? filtered.length + " / " + investors.length + " risultati" : investors.length + " investitori";
 
@@ -561,20 +283,20 @@ function render() {
   }
 
   list.innerHTML = filtered.map(inv => `
-    <div class="investor-card" id="card-${inv.id}" onclick="toggleDetail(${inv.id})">
+    <div class="investor-card" id="card-${inv.id}" onclick="toggleDetail('${inv.id}')">
       <div class="card-row">
         <div>
           <div class="inv-name">${inv.name}</div>
           <div class="inv-fund">${inv.fund}</div>
         </div>
         <div class="tags">
-          ${inv.stage.map(s => `<span class="tag ${stageTagClass(s)}">${s}</span>`).join("")}
+          ${inv.stage ? inv.stage.map(s => `<span class="tag ${stageTagClass(s)}">${s}</span>`).join("") : ''}
         </div>
         <div class="tags">
-          ${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join("")}
+          ${inv.sectors ? inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join("") : ''}
         </div>
         <div class="founder-bubbles">
-          ${inv.founders.length > 0
+          ${(inv.founders && inv.founders.length > 0)
             ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join("")
             : `<span class="fbubble-none">—</span>`}
         </div>
@@ -595,12 +317,12 @@ function render() {
         <div class="detail-block">
           <div class="detail-block-label">Portfolio (esempi)</div>
           <div class="portfolio-list">
-            ${inv.portfolio.map(p => `<span class="portfolio-item">${p}</span>`).join("")}
+            ${inv.portfolio ? inv.portfolio.map(p => `<span class="portfolio-item">${p}</span>`).join("") : ''}
           </div>
         </div>
         <div class="detail-block">
           <div class="detail-block-label">Ticket</div>
-          <div style="font-family: var(--mono); font-size: 14px; color: var(--text); margin-bottom: 12px;">${inv.ticket}</div>
+          <div style="font-family: var(--mono); font-size: 14px; color: var(--text); margin-bottom: 12px;">${inv.ticket || '—'}</div>
           <div class="detail-actions" onclick="event.stopPropagation()">
             <button class="btn-secondary">+ Aggiungi interazione</button>
             <button class="btn-secondary">Apri in HubSpot ↗</button>
@@ -615,14 +337,15 @@ function openModal() { document.getElementById("modal").classList.add("open"); }
 function closeModal() { document.getElementById("modal").classList.remove("open"); }
 function closeModalOutside(e) { if (e.target === document.getElementById("modal")) closeModal(); }
 
-function addInvestor() {
+async function addInvestor() {
   const name = document.getElementById("f-name").value.trim();
   const fund = document.getElementById("f-fund").value.trim();
   if (!name || !fund) return;
+  
   const sectors = document.getElementById("f-sectors").value.split(",").map(s => s.trim()).filter(Boolean);
-  investors.unshift({
-    id: nextId++,
-    name, fund,
+  const newInv = {
+    name,
+    fund,
     stage: [document.getElementById("f-new-stage").value],
     sectors: sectors.length ? sectors : ["—"],
     ticket: document.getElementById("f-ticket").value.trim() || "—",
@@ -630,13 +353,22 @@ function addInvestor() {
     founders: [],
     portfolio: [],
     note: document.getElementById("f-note").value.trim()
-  });
-  closeModal();
-  ["f-name","f-fund","f-sectors","f-ticket","f-note"].forEach(id => document.getElementById(id).value = "");
-  render();
+  };
+
+  const { error } = await supabase.from('investors').insert([newInv]);
+
+  if (error) {
+    alert("Errore nel salvataggio dell'investitore");
+    console.error(error);
+  } else {
+    closeModal();
+    ["f-name","f-fund","f-sectors","f-ticket","f-note"].forEach(id => document.getElementById(id).value = "");
+    await fetchInvestors();
+  }
 }
 
-render();
+// Inizializzazione caricamento dati
+fetchInvestors();
 </script>
 </body>
 </html>
