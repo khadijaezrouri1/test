@@ -6,7 +6,7 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Stili mantenuti */
+  /* Stili mantenuti dal file originale */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
@@ -50,7 +50,6 @@
   .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; }
   .dot-green { background: var(--green); }
-  .dot-amber { background: #D4860A; }
   .dot-gray { background: var(--text-faint); }
   .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
   .card-detail.open { display: grid; }
@@ -64,7 +63,7 @@
   .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-  .select-status { width: 100%; margin-top: 4px; }
+  .select-status { width: 100%; margin-top: 4px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 5px; }
 </style>
 </head>
 <body>
@@ -82,16 +81,20 @@
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-label">Totale investitori</div><div class="stat-val" id="stat-total">0</div></div>
-  <div class="stat-item"><div class="stat-label">Già contattati</div><div class="stat-val" id="stat-contacted">0</div></div>
-  <div class="stat-item"><div class="stat-label">Meeting avuti</div><div class="stat-val" id="stat-meeting">0</div></div>
+  <div class="stat-item"><div class="stat-label">Miei investitori contattati</div><div class="stat-val" id="stat-contacted">0</div></div>
 </div>
 
 <div class="filters">
   <div class="search-wrap">
-    <input type="text" id="search" placeholder="Cerca investitore o fondo...">
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+    <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
   </div>
-  <select id="f-status-filter" onchange="render()"><option value="">Tutti i contatti</option><option value="Meeting avuto">Meeting avuto</option><option value="Contattato">Contattato</option><option value="Mai contattato">Mai contattato</option></select>
+  <select id="f-status-filter" onchange="render()">
+    <option value="">Miei contatti: Tutti</option>
+    <option value="Contattato">Solo Contattati da me</option>
+    <option value="Non contattato">Non contattati da me</option>
+  </select>
+  <div class="filter-count" id="filter-count"></div>
 </div>
 
 <div class="table-wrap">
@@ -100,7 +103,7 @@
     <div class="col-header">Stage</div>
     <div class="col-header">Settori</div>
     <div class="col-header">Founder network</div>
-    <div class="col-header">Status</div>
+    <div class="col-header">Mio Status</div>
   </div>
   <div id="list"></div>
 </div>
@@ -135,7 +138,7 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxubmN4Zm5pZ2R6YXJ6eWZ3YWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDM5NTgsImV4cCI6MjA5MzUxOTk1OH0.tySF08HVUwGJ2wkLgA9vKKtZxLJ8agRdvgQW7qlA-t4';
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // LOGICA RECUPERO NOME E COGNOME DALL'URL
+  // LOGICA RECUPERO UTENTE
   const params = new URLSearchParams(window.location.search);
   const firstName = params.get('name') || "";
   const lastName = params.get('lastname') || "";
@@ -158,67 +161,73 @@
     }
   }
 
-  window.updateStatus = async function(selectEl, id, newStatus) {
+  window.toggleFounderStatus = async function(selectEl, id, newStatus) {
     selectEl.disabled = true;
     const inv = investors.find(i => i.id === id);
     let updatedFounders = [...inv.founders];
 
-    if ((newStatus === 'Contattato' || newStatus === 'Meeting avuto') && !updatedFounders.includes(currentUser)) {
-      updatedFounders.push(currentUser);
+    if (newStatus === 'Contattato') {
+      if (!updatedFounders.includes(currentUser)) updatedFounders.push(currentUser);
+    } else {
+      updatedFounders = updatedFounders.filter(f => f !== currentUser);
     }
 
-    const { error } = await supabase.from('investors').update({ status: newStatus, founders: updatedFounders }).eq('id', id);
+    const { error } = await supabase.from('investors').update({ founders: updatedFounders }).eq('id', id);
 
     if (error) {
-        alert("Errore: " + error.message);
-        selectEl.disabled = false;
-        return;
+        alert("Errore nell'aggiornamento: " + error.message);
+    } else {
+        inv.founders = updatedFounders;
+        render();
     }
-
-    inv.status = newStatus;
-    inv.founders = updatedFounders;
-    render(); // Re-renderizza per aggiornare i pallini e i contatori
   }
 
   function render() {
     const q = document.getElementById('search').value.toLowerCase();
-    const fStatus = document.getElementById('f-status-filter').value;
-    const filtered = investors.filter(inv =>
-      (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q)) &&
-      (!fStatus || inv.status === fStatus)
-    );
+    const fStatusFilter = document.getElementById('f-status-filter').value;
 
+    const filtered = investors.filter(inv => {
+      const matchSearch = (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q));
+      const isContactedByMe = inv.founders.includes(currentUser);
+      
+      if (fStatusFilter === 'Contattato') return matchSearch && isContactedByMe;
+      if (fStatusFilter === 'Non contattato') return matchSearch && !isContactedByMe;
+      return matchSearch;
+    });
+
+    // Aggiornamento Statistiche Personalizzate
     document.getElementById('stat-total').textContent = investors.length;
-    document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.length > 0).length;
-    document.getElementById('stat-meeting').textContent = investors.filter(i => i.status === 'Meeting avuto').length;
+    document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.includes(currentUser)).length;
 
     const list = document.getElementById('list');
-    list.innerHTML = filtered.map(inv => `
-      <div class="investor-card">
-        <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
-          <div><div class="inv-name">${inv.name}</div><div class="inv-fund">${inv.fund}</div></div>
-          <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
-          <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
-          <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
-          <div class="status-chip">
-            <span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : (inv.status === 'Contattato' ? 'dot-amber' : 'dot-gray')}"></span>
-            ${inv.status}
+    list.innerHTML = filtered.map(inv => {
+      const isMe = inv.founders.includes(currentUser);
+      return `
+        <div class="investor-card">
+          <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
+            <div><div class="inv-name">${inv.name}</div><div class="inv-fund">${inv.fund}</div></div>
+            <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
+            <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
+            <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
+            <div class="status-chip">
+              <span class="dot ${isMe ? 'dot-green' : 'dot-gray'}"></span>
+              ${isMe ? 'Contattato' : 'Non contattato'}
+            </div>
+          </div>
+          <div class="card-detail" onclick="event.stopPropagation()">
+              <div class="detail-block">
+                  <div class="detail-block-label">Mio Stato Personale</div>
+                  <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
+                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato</option>
+                      <option value="Contattato" ${isMe ? 'selected' : ''}>Contattato</option>
+                  </select>
+              </div>
+              <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
+              <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
           </div>
         </div>
-        <div class="card-detail" onclick="event.stopPropagation()">
-            <div class="detail-block">
-                <div class="detail-block-label">Aggiorna Stato</div>
-                <select class="select-status" onchange="updateStatus(this, '${inv.id}', this.value)">
-                    <option value="Mai contattato" ${inv.status === 'Mai contattato' ? 'selected' : ''}>Mai contattato</option>
-                    <option value="Contattato"     ${inv.status === 'Contattato'     ? 'selected' : ''}>Contattato</option>
-                    <option value="Meeting avuto"  ${inv.status === 'Meeting avuto'  ? 'selected' : ''}>Meeting avuto</option>
-                </select>
-            </div>
-            <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
-            <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   window.openModal = () => document.getElementById('modal').classList.add('open');
@@ -240,7 +249,7 @@
       stage: [document.getElementById('f-new-stage').value],
       sectors, 
       ticket: document.getElementById('f-ticket').value,
-      status: 'Mai contattato',
+      status: 'Mai contattato', // Mantenuto per compatibilità DB ma ignorato visivamente
       founders: [], 
       description: document.getElementById('f-note').value
     }]);
