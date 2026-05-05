@@ -6,7 +6,7 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Stili mantenuti dal file originale */
+  /* Stili originali mantenuti */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
@@ -32,7 +32,7 @@
   .search-wrap { position: relative; flex: 1; min-width: 200px; }
   .search-wrap input { width: 100%; padding: 8px 12px 8px 34px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
-  select { padding: 7px 10px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; outline: none; }
+  select { padding: 7px 10px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; outline: none; font-family: var(--font); }
   .table-wrap { padding: 16px 20px; }
   .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; }
   .col-header { font-size: 11px; font-family: var(--mono); text-transform: uppercase; color: var(--text-faint); }
@@ -89,6 +89,7 @@
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
     <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
   </div>
+  
   <select id="f-stage" onchange="render()">
     <option value="">Tutti gli stage</option>
     <option value="Pre-seed">Pre-seed</option>
@@ -96,6 +97,7 @@
     <option value="Series A">Series A</option>
     <option value="Series B">Series B</option>
   </select>
+
   <select id="f-sector" onchange="render()">
     <option value="">Tutti i settori</option>
     <option value="Fintech">Fintech</option>
@@ -105,12 +107,12 @@
     <option value="Marketplace">Marketplace</option>
     <option value="HealthTech">HealthTech</option>
   </select>
-  <select id="f-status" onchange="render()">
-    <option value="">Tutte le interazioni</option>
+
+  <select id="f-status-filter" onchange="render()">
+    <option value="">Status: Tutti</option>
     <option value="Contattato">Contattato</option>
-    <option value="Mai contattato">Non contattato</option>
+    <option value="Non contattato">Non contattato</option>
   </select>
-  <div class="filter-count" id="filter-count"></div>
 </div>
 
 <div class="table-wrap">
@@ -128,21 +130,25 @@
   <div class="modal">
     <h3 style="margin-bottom:20px">Nuovo investitore</h3>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Nome Investitore</label><input class="form-input" id="f-inv-name" type="text" placeholder="Es: Mario Rossi"></div>
-      <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text" placeholder="Es: Italian Angels"></div>
+      <div class="form-group"><label class="form-label">Nome Investitore</label><input class="form-input" id="f-inv-name" type="text"></div>
+      <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Stage</label>
-        <select class="form-input" id="f-new-stage"><option value="Seed">Seed</option><option value="Pre-seed">Pre-seed</option></select>
+        <select class="form-input" id="f-new-stage">
+            <option value="Seed">Seed</option>
+            <option value="Pre-seed">Pre-seed</option>
+            <option value="Series A">Series A</option>
+        </select>
       </div>
       <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
-    <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text"></div>
+    <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text" placeholder="SaaS, Fintech..."></div>
     <div class="form-group"><label class="form-label">Note</label><input class="form-input" id="f-note" type="text"></div>
     <div class="modal-actions">
       <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
-      <button class="btn-save" onclick="addInvestor()">Salva</button>
+      <button class="btn-save" onclick="addInvestor()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer">Salva</button>
     </div>
   </div>
 </div>
@@ -154,12 +160,10 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxubmN4Zm5pZ2R6YXJ6eWZ3YWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDM5NTgsImV4cCI6MjA5MzUxOTk1OH0.tySF08HVUwGJ2wkLgA9vKKtZxLJ8agRdvgQW7qlA-t4';
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // LOGICA RECUPERO UTENTE
   const params = new URLSearchParams(window.location.search);
   const firstName = params.get('name') || "";
   const lastName = params.get('lastname') || "";
   const currentUser = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : "Founder";
-  
   document.getElementById('current-user-display').textContent = currentUser;
 
   let investors = [];
@@ -169,8 +173,8 @@
     if (!error) {
       investors = data.map(row => ({
         ...row,
-        stage: Array.isArray(row.stage) ? row.stage : [row.stage],
-        sectors: Array.isArray(row.sectors) ? row.sectors : [row.sectors],
+        stage: Array.isArray(row.stage) ? row.stage : (row.stage ? [row.stage] : []),
+        sectors: Array.isArray(row.sectors) ? row.sectors : (row.sectors ? [row.sectors] : []),
         founders: Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])
       }));
       render();
@@ -189,29 +193,34 @@
     }
 
     const { error } = await supabase.from('investors').update({ founders: updatedFounders }).eq('id', id);
-
-    if (error) {
-        alert("Errore nell'aggiornamento: " + error.message);
-    } else {
+    if (!error) {
         inv.founders = updatedFounders;
         render();
+    } else {
+        alert("Errore: " + error.message);
+        selectEl.disabled = false;
     }
   }
 
-  function render() {
+  window.render = function() {
     const q = document.getElementById('search').value.toLowerCase();
-    const fStatusFilter = document.getElementById('f-status-filter').value;
+    const fStage = document.getElementById('f-stage').value;
+    const fSector = document.getElementById('f-sector').value;
+    const fStatus = document.getElementById('f-status-filter').value;
 
     const filtered = investors.filter(inv => {
       const matchSearch = (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q));
-      const isContactedByMe = inv.founders.includes(currentUser);
+      const matchStage = !fStage || inv.stage.includes(fStage);
+      const matchSector = !fSector || inv.sectors.some(s => s.toLowerCase() === fSector.toLowerCase());
       
-      if (fStatusFilter === 'Contattato') return matchSearch && isContactedByMe;
-      if (fStatusFilter === 'Non contattato') return matchSearch && !isContactedByMe;
-      return matchSearch;
+      const isMe = inv.founders.includes(currentUser);
+      let matchStatus = true;
+      if (fStatus === 'Contattato') matchStatus = isMe;
+      if (fStatus === 'Non contattato') matchStatus = !isMe;
+
+      return matchSearch && matchStage && matchSector && matchStatus;
     });
 
-    // Aggiornamento Statistiche Personalizzate
     document.getElementById('stat-total').textContent = investors.length;
     document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.includes(currentUser)).length;
 
@@ -234,8 +243,8 @@
               <div class="detail-block">
                   <div class="detail-block-label">Mio Stato Personale</div>
                   <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
-                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato</option>
-                      <option value="Contattato" ${isMe ? 'selected' : ''}>Contattato</option>
+                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato da me</option>
+                      <option value="Contattato" ${isMe ? 'selected' : ''}>Segna come Contattato</option>
                   </select>
               </div>
               <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
@@ -252,12 +261,9 @@
   window.addInvestor = async function() {
     const invName = document.getElementById('f-inv-name').value.trim();
     const fund = document.getElementById('f-fund').value.trim();
-    const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim());
+    const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim()).filter(Boolean);
     
-    if (!invName || !fund) {
-        alert("Inserisci Nome e Fondo");
-        return;
-    }
+    if (!invName || !fund) { alert("Inserisci Nome e Fondo"); return; }
 
     const { error } = await supabase.from('investors').insert([{
       name: invName, 
@@ -265,16 +271,15 @@
       stage: [document.getElementById('f-new-stage').value],
       sectors, 
       ticket: document.getElementById('f-ticket').value,
-      status: 'Mai contattato', // Mantenuto per compatibilità DB ma ignorato visivamente
+      status: 'Mai contattato', 
       founders: [], 
       description: document.getElementById('f-note').value
     }]);
 
     if (!error) { window.closeModal(); loadInvestors(); }
-    else { alert("Errore nel salvataggio: " + error.message); }
+    else { alert("Errore: " + error.message); }
   };
 
-  document.getElementById('search').addEventListener('input', render);
   loadInvestors();
 </script>
 </body>
