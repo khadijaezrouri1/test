@@ -6,7 +6,7 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Manteniamo lo stile precedente per brevità, è invariato */
+  /* Stili esistenti mantenuti */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
@@ -50,6 +50,7 @@
   .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; }
   .dot-green { background: var(--green); }
+  .dot-amber { background: #D4860A; }
   .dot-gray { background: var(--text-faint); }
   .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
   .card-detail.open { display: grid; }
@@ -63,6 +64,7 @@
   .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+  .select-status { width: 100%; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -70,7 +72,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">Investor Hub <span>/ Toolio</span></div>
-    <span class="pill-founders" id="current-founder-pill">caricamento...</span>
+    <span class="pill-founders" id="current-user-display">founder only</span>
   </div>
   <button class="btn-add" onclick="openModal()">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
@@ -84,34 +86,12 @@
   <div class="stat-item"><div class="stat-label">Meeting avuti</div><div class="stat-val" id="stat-meeting">0</div></div>
 </div>
 
-  <div class="filters">
+<div class="filters">
   <div class="search-wrap">
+    <input type="text" id="search" placeholder="Cerca investitore o fondo...">
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
-    <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
   </div>
-  <select id="f-stage" onchange="render()">
-    <option value="">Tutti gli stage</option>
-    <option value="Pre-seed">Pre-seed</option>
-    <option value="Seed">Seed</option>
-    <option value="Series A">Series A</option>
-    <option value="Series B">Series B</option>
-  </select>
-  <select id="f-sector" onchange="render()">
-    <option value="">Tutti i settori</option>
-    <option value="Fintech">Fintech</option>
-    <option value="SaaS">SaaS</option>
-    <option value="Deeptech">Deeptech</option>
-    <option value="Climate">Climate</option>
-    <option value="Marketplace">Marketplace</option>
-    <option value="HealthTech">HealthTech</option>
-  </select>
-  <select id="f-status" onchange="render()">
-    <option value="">Tutte le interazioni</option>
-    <option value="Meeting avuto">Meeting avuto</option>
-    <option value="Contattato">Contattato</option>
-    <option value="Mai contattato">Mai contattato</option>
-  </select>
-  <div class="filter-count" id="filter-count"></div>
+  <select id="f-status-filter" onchange="render()"><option value="">Tutti i contatti</option><option value="Meeting avuto">Meeting avuto</option><option value="Contattato">Contattato</option><option value="Mai contattato">Mai contattato</option></select>
 </div>
 
 <div class="table-wrap">
@@ -133,14 +113,17 @@
       <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="f-new-stage"><option value="Seed">Seed</option><option value="Pre-seed">Pre-seed</option></select></div>
-      <div class="form-group"><label class="form-label">Ticket</label><input class="form-input" id="f-ticket" type="text"></div>
+      <div class="form-group">
+        <label class="form-label">Stage</label>
+        <select class="form-input" id="f-new-stage"><option value="Seed">Seed</option><option value="Pre-seed">Pre-seed</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
     <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text"></div>
     <div class="form-group"><label class="form-label">Note</label><input class="form-input" id="f-note" type="text"></div>
     <div class="modal-actions">
       <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
-      <button class="btn-save" id="save-btn" onclick="addInvestor()">Salva</button>
+      <button class="btn-save" onclick="addInvestor()">Salva</button>
     </div>
   </div>
 </div>
@@ -157,8 +140,8 @@
   const firstName = params.get('name') || "";
   const lastName = params.get('lastname') || "";
   const currentUser = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : "Founder";
-
-  document.getElementById('current-founder-pill').textContent = `Utente: ${currentUser}`;
+  
+  document.getElementById('current-user-display').textContent = currentUser;
 
   let investors = [];
 
@@ -167,35 +150,70 @@
     if (!error) {
       investors = data.map(row => ({
         ...row,
-        stage: Array.isArray(row.stage) ? row.stage : (row.stage ? [row.stage] : []),
-        sectors: Array.isArray(row.sectors) ? row.sectors : (row.sectors ? [row.sectors] : []),
+        stage: Array.isArray(row.stage) ? row.stage : [row.stage],
+        sectors: Array.isArray(row.sectors) ? row.sectors : [row.sectors],
         founders: Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])
       }));
       render();
     }
   }
 
+  window.updateStatus = async function(id, newStatus) {
+    const inv = investors.find(i => i.id === id);
+    let updatedFounders = [...inv.founders];
+    
+    // Se lo stato diventa 'Contattato' o 'Meeting avuto', aggiungiamo l'utente corrente se non c'è
+    if ((newStatus === 'Contattato' || newStatus === 'Meeting avuto') && !updatedFounders.includes(currentUser)) {
+        updatedFounders.push(currentUser);
+    }
+
+    const { error } = await supabase
+      .from('investors')
+      .update({ 
+        status: newStatus,
+        founders: updatedFounders 
+      })
+      .eq('id', id);
+
+    if (!error) {
+      loadInvestors();
+    } else {
+      alert("Errore nell'aggiornamento dello stato");
+    }
+  }
+
   function render() {
     const q = document.getElementById('search').value.toLowerCase();
-    const fStatus = document.getElementById('f-status').value;
+    const fStatus = document.getElementById('f-status-filter').value;
     const filtered = investors.filter(inv => (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q)) && (!fStatus || inv.status === fStatus));
 
     document.getElementById('stat-total').textContent = investors.length;
-    document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.length > 0).length;
+    document.getElementById('stat-contacted').textContent = investors.filter(i => i.status === 'Contattato' || i.status === 'Meeting avuto').length;
     document.getElementById('stat-meeting').textContent = investors.filter(i => i.status === 'Meeting avuto').length;
 
     const list = document.getElementById('list');
     list.innerHTML = filtered.map(inv => `
-      <div class="investor-card" onclick="this.querySelector('.card-detail').classList.toggle('open')">
-        <div class="card-row">
+      <div class="investor-card">
+        <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
           <div><div class="inv-name">${inv.name}</div><div class="inv-fund">${inv.fund}</div></div>
           <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
           <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
           <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
-          <div class="status-chip"><span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : 'dot-gray'}"></span>${inv.status}</div>
+          <div class="status-chip">
+            <span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : (inv.status === 'Contattato' ? 'dot-amber' : 'dot-gray')}"></span>
+            ${inv.status}
+          </div>
         </div>
-        <div class="card-detail">
-            <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || '—'}</div></div>
+        <div class="card-detail" onclick="event.stopPropagation()">
+            <div class="detail-block">
+                <div class="detail-block-label">Aggiorna Stato</div>
+                <select class="select-status" onchange="updateStatus('${inv.id}', this.value)">
+                    <option value="Mai contattato" ${inv.status === 'Mai contattato' ? 'selected' : ''}>Mai contattato</option>
+                    <option value="Contattato" ${inv.status === 'Contattato' ? 'selected' : ''}>Contattato</option>
+                    <option value="Meeting avuto" ${inv.status === 'Meeting avuto' ? 'selected' : ''}>Meeting avuto</option>
+                </select>
+            </div>
+            <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
             <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
         </div>
       </div>
@@ -206,40 +224,25 @@
   window.closeModal = () => document.getElementById('modal').classList.remove('open');
 
   window.addInvestor = async function() {
-    const btn = document.getElementById('save-btn');
-    btn.disabled = true;
-    btn.textContent = "Salvataggio...";
-
     const name = document.getElementById('f-name').value;
     const fund = document.getElementById('f-fund').value;
-    const sectorsText = document.getElementById('f-sectors').value;
-    const sectorsArray = sectorsText ? sectorsText.split(',').map(s => s.trim()) : [];
+    const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim());
     
-    // CORREZIONE FORMATO ARRAY PER EVITARE "INVALID ARRAY"
     const { error } = await supabase.from('investors').insert([{
-      name: name,
-      fund: fund, 
+      name, fund, 
       stage: [document.getElementById('f-new-stage').value],
-      sectors: sectorsArray, 
+      sectors, 
       ticket: document.getElementById('f-ticket').value,
       status: 'Mai contattato',
-      founders: [currentUser],
+      founders: [], // All'inizio è vuoto, si popola quando si cambia stato
       description: document.getElementById('f-note').value
     }]);
 
-    if (!error) { 
-      window.closeModal(); 
-      loadInvestors(); 
-    } else { 
-      console.error(error);
-      alert("Errore RLS o Formato: " + error.message); 
-    }
-    btn.disabled = false;
-    btn.textContent = "Salva";
+    if (!error) { window.closeModal(); loadInvestors(); }
+    else { alert("Errore nel salvataggio"); }
   };
 
   document.getElementById('search').addEventListener('input', render);
-  document.getElementById('f-status').addEventListener('change', render);
   loadInvestors();
 </script>
 </body>
