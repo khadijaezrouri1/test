@@ -158,38 +158,71 @@
     }
   }
 
-  window.updateStatus = async function(id, newStatus) {
+  // Aggiorna stato nel DB e aggiorna la card visivamente SENZA chiuderla
+  window.updateStatus = async function(selectEl, id, newStatus) {
+    selectEl.disabled = true;
+    selectEl.style.opacity = '0.5';
+
     const inv = investors.find(i => i.id === id);
-    let updatedFounders = [...inv.founders];
-    
-    // Se lo stato diventa 'Contattato' o 'Meeting avuto', aggiungiamo l'utente corrente se non c'è
+    if (!inv) { selectEl.disabled = false; selectEl.style.opacity = '1'; return; }
+
+    let updatedFounders = Array.isArray(inv.founders) ? [...inv.founders] : [];
+
+    // Aggiungi il founder corrente ai contatti se non già presente
     if ((newStatus === 'Contattato' || newStatus === 'Meeting avuto') && !updatedFounders.includes(currentUser)) {
-        updatedFounders.push(currentUser);
+      updatedFounders.push(currentUser);
     }
 
     const { error } = await supabase
       .from('investors')
-      .update({ 
-        status: newStatus,
-        founders: updatedFounders 
-      })
+      .update({ status: newStatus, founders: updatedFounders })
       .eq('id', id);
 
-    if (!error) {
-      loadInvestors();
-    } else {
-      alert("Errore nell'aggiornamento dello stato");
+    selectEl.disabled = false;
+    selectEl.style.opacity = '1';
+
+    if (error) {
+      alert("Errore nell'aggiornamento: " + error.message);
+      selectEl.value = inv.status; // ripristina valore precedente
+      return;
     }
+
+    // Aggiorna il dato in memoria
+    inv.status = newStatus;
+    inv.founders = updatedFounders;
+
+    // Aggiorna solo gli elementi visivi della card, senza chiuderla
+    const card = selectEl.closest('.investor-card');
+    if (card) {
+      const dot = card.querySelector('.dot');
+      const statusText = card.querySelector('.status-text');
+      const founderBubbles = card.querySelector('.founder-bubbles');
+
+      if (dot) dot.className = 'dot ' + (newStatus === 'Meeting avuto' ? 'dot-green' : newStatus === 'Contattato' ? 'dot-amber' : 'dot-gray');
+      if (statusText) statusText.textContent = newStatus;
+      if (founderBubbles) {
+        founderBubbles.innerHTML = updatedFounders.length > 0
+          ? updatedFounders.map(f => `<span class="fbubble">${f}</span>`).join('')
+          : '<span class="fbubble-none">—</span>';
+      }
+    }
+
+    // Aggiorna solo i contatori
+    document.getElementById('stat-contacted').textContent = investors.filter(i => i.status === 'Contattato' || i.status === 'Meeting avuto').length;
+    document.getElementById('stat-meeting').textContent   = investors.filter(i => i.status === 'Meeting avuto').length;
   }
 
   function render() {
     const q = document.getElementById('search').value.toLowerCase();
     const fStatus = document.getElementById('f-status-filter').value;
-    const filtered = investors.filter(inv => (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q)) && (!fStatus || inv.status === fStatus));
+    const filtered = investors.filter(inv =>
+      (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q)) &&
+      (!fStatus || inv.status === fStatus)
+    );
 
-    document.getElementById('stat-total').textContent = investors.length;
+    document.getElementById('stat-total').textContent     = investors.length;
     document.getElementById('stat-contacted').textContent = investors.filter(i => i.status === 'Contattato' || i.status === 'Meeting avuto').length;
-    document.getElementById('stat-meeting').textContent = investors.filter(i => i.status === 'Meeting avuto').length;
+    document.getElementById('stat-meeting').textContent   = investors.filter(i => i.status === 'Meeting avuto').length;
 
     const list = document.getElementById('list');
     list.innerHTML = filtered.map(inv => `
@@ -201,16 +234,16 @@
           <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
           <div class="status-chip">
             <span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : (inv.status === 'Contattato' ? 'dot-amber' : 'dot-gray')}"></span>
-            ${inv.status}
+            <span class="status-text">${inv.status}</span>
           </div>
         </div>
         <div class="card-detail" onclick="event.stopPropagation()">
             <div class="detail-block">
                 <div class="detail-block-label">Aggiorna Stato</div>
-                <select class="select-status" onchange="updateStatus('${inv.id}', this.value)">
+                <select class="select-status" onchange="updateStatus(this, '${inv.id}', this.value)">
                     <option value="Mai contattato" ${inv.status === 'Mai contattato' ? 'selected' : ''}>Mai contattato</option>
-                    <option value="Contattato" ${inv.status === 'Contattato' ? 'selected' : ''}>Contattato</option>
-                    <option value="Meeting avuto" ${inv.status === 'Meeting avuto' ? 'selected' : ''}>Meeting avuto</option>
+                    <option value="Contattato"     ${inv.status === 'Contattato'     ? 'selected' : ''}>Contattato</option>
+                    <option value="Meeting avuto"  ${inv.status === 'Meeting avuto'  ? 'selected' : ''}>Meeting avuto</option>
                 </select>
             </div>
             <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
