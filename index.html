@@ -6,124 +6,55 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* Manteniamo lo stile precedente per brevità, è invariato */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #F5F4F0;
-    --surface: #FFFFFF;
-    --surface2: #EFEFEA;
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.14);
-    --text: #1A1A18;
-    --text-muted: #6B6B65;
-    --text-faint: #A0A09A;
-    --accent: #1A1A18;
-    --green: #1D7A52;
-    --green-bg: #E8F5EE;
-    --amber: #8A5A00;
-    --amber-bg: #FDF3DC;
-    --blue: #1A4A8A;
-    --blue-bg: #EAF0FB;
-    --purple: #4A2E8A;
-    --purple-bg: #F0ECFB;
-    --radius: 10px;
-    --radius-sm: 6px;
-    --font: 'DM Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
+    --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
+    --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.14);
+    --text: #1A1A18; --text-muted: #6B6B65; --text-faint: #A0A09A;
+    --accent: #1A1A18; --green: #1D7A52; --green-bg: #E8F5EE;
+    --amber: #8A5A00; --amber-bg: #FDF3DC; --blue: #1A4A8A;
+    --blue-bg: #EAF0FB; --purple: #4A2E8A; --purple-bg: #F0ECFB;
+    --radius: 10px; --radius-sm: 6px; --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
   }
-
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .header-left { display: flex; align-items: center; gap: 10px; }
   .logo { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
   .logo span { color: var(--text-faint); font-weight: 400; }
-  
-  .pill-founders {
-    font-size: 11px;
-    font-family: var(--mono);
-    background: var(--surface2);
-    color: var(--text-muted);
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-
-  .btn-add {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 7px 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
+  .pill-founders { font-size: 11px; font-family: var(--mono); background: var(--surface2); color: var(--text-muted); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); }
+  .btn-add { font-family: var(--font); font-size: 13px; font-weight: 500; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
   .stats-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
   .stat-item { flex: 1; background: var(--surface); padding: 12px 20px; display: flex; flex-direction: column; gap: 2px; }
   .stat-label { font-size: 11px; color: var(--text-faint); font-family: var(--mono); text-transform: uppercase; }
   .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
-
   .filters { padding: 12px 20px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: var(--bg); border-bottom: 1px solid var(--border); }
   .search-wrap { position: relative; flex: 1; min-width: 200px; }
   .search-wrap input { width: 100%; padding: 8px 12px 8px 34px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
-  
   select { padding: 7px 10px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; outline: none; }
-
   .table-wrap { padding: 16px 20px; }
   .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; }
   .col-header { font-size: 11px; font-family: var(--mono); text-transform: uppercase; color: var(--text-faint); }
-
   .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; overflow: hidden; cursor: pointer; transition: all 0.15s; }
   .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-  
   .card-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
   .inv-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .inv-fund { font-size: 12px; color: var(--text-muted); }
-
   .tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .tag { font-size: 11px; font-family: var(--mono); padding: 3px 7px; border-radius: 4px; }
   .tag-stage-seed { background: var(--amber-bg); color: var(--amber); }
   .tag-sector { background: var(--surface2); color: var(--text-muted); }
-
   .founder-bubbles { display: flex; flex-wrap: wrap; gap: 4px; }
   .fbubble { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 2px 8px; color: var(--text-muted); }
-  
   .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; }
   .dot-green { background: var(--green); }
   .dot-gray { background: var(--text-faint); }
-
-  /* EXPAND PANEL */
   .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
   .card-detail.open { display: grid; }
   .detail-block-label { font-size: 11px; font-family: var(--mono); text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
   .detail-note { font-size: 13px; color: var(--text-muted); font-style: italic; }
-
-  /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--surface); border-radius: var(--radius); width: 480px; padding: 24px; }
@@ -139,7 +70,7 @@
 <div class="header">
   <div class="header-left">
     <div class="logo">Investor Hub <span>/ Toolio</span></div>
-    <span class="pill-founders">founder only</span>
+    <span class="pill-founders" id="current-founder-pill">caricamento...</span>
   </div>
   <button class="btn-add" onclick="openModal()">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
@@ -162,13 +93,6 @@
 </div>
 
 <div class="table-wrap">
-  <div class="table-header">
-    <div class="col-header">Investitore</div>
-    <div class="col-header">Stage</div>
-    <div class="col-header">Settori</div>
-    <div class="col-header">Founder network</div>
-    <div class="col-header">Status</div>
-  </div>
   <div id="list"></div>
 </div>
 
@@ -180,17 +104,14 @@
       <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Stage</label>
-        <select class="form-input" id="f-new-stage"><option value="Seed">Seed</option><option value="Pre-seed">Pre-seed</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
+      <div class="form-group"><label class="form-label">Stage</label><select class="form-input" id="f-new-stage"><option value="Seed">Seed</option><option value="Pre-seed">Pre-seed</option></select></div>
+      <div class="form-group"><label class="form-label">Ticket</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
     <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text"></div>
     <div class="form-group"><label class="form-label">Note</label><input class="form-input" id="f-note" type="text"></div>
     <div class="modal-actions">
       <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
-      <button class="btn-save" onclick="addInvestor()">Salva</button>
+      <button class="btn-save" id="save-btn" onclick="addInvestor()">Salva</button>
     </div>
   </div>
 </div>
@@ -202,8 +123,13 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxubmN4Zm5pZ2R6YXJ6eWZ3YWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDM5NTgsImV4cCI6MjA5MzUxOTk1OH0.tySF08HVUwGJ2wkLgA9vKKtZxLJ8agRdvgQW7qlA-t4';
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // LOGICA IDENTIFICAZIONE UTENTE DALL'URL
-  const currentUser = window.location.search.split('=')[0].replace('?', '') || "Founder";
+  // LOGICA RECUPERO NOME E COGNOME DALL'URL
+  const params = new URLSearchParams(window.location.search);
+  const firstName = params.get('name') || "";
+  const lastName = params.get('lastname') || "";
+  const currentUser = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : "Founder";
+
+  document.getElementById('current-founder-pill').textContent = `Utente: ${currentUser}`;
 
   let investors = [];
 
@@ -212,8 +138,8 @@
     if (!error) {
       investors = data.map(row => ({
         ...row,
-        stage: Array.isArray(row.stage) ? row.stage : [row.stage],
-        sectors: Array.isArray(row.sectors) ? row.sectors : [row.sectors],
+        stage: Array.isArray(row.stage) ? row.stage : (row.stage ? [row.stage] : []),
+        sectors: Array.isArray(row.sectors) ? row.sectors : (row.sectors ? [row.sectors] : []),
         founders: Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])
       }));
       render();
@@ -240,7 +166,7 @@
           <div class="status-chip"><span class="dot ${inv.status === 'Meeting avuto' ? 'dot-green' : 'dot-gray'}"></span>${inv.status}</div>
         </div>
         <div class="card-detail">
-            <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
+            <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || '—'}</div></div>
             <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
         </div>
       </div>
@@ -251,22 +177,36 @@
   window.closeModal = () => document.getElementById('modal').classList.remove('open');
 
   window.addInvestor = async function() {
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    btn.textContent = "Salvataggio...";
+
     const name = document.getElementById('f-name').value;
     const fund = document.getElementById('f-fund').value;
-    const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim());
+    const sectorsText = document.getElementById('f-sectors').value;
+    const sectorsArray = sectorsText ? sectorsText.split(',').map(s => s.trim()) : [];
     
+    // CORREZIONE FORMATO ARRAY PER EVITARE "INVALID ARRAY"
     const { error } = await supabase.from('investors').insert([{
-      name, fund, 
+      name: name,
+      fund: fund, 
       stage: [document.getElementById('f-new-stage').value],
-      sectors, 
+      sectors: sectorsArray, 
       ticket: document.getElementById('f-ticket').value,
       status: 'Mai contattato',
-      founders: [currentUser], // ASSEGNAZIONE AUTOMATICA FOUNDER
+      founders: [currentUser],
       description: document.getElementById('f-note').value
     }]);
 
-    if (!error) { window.closeModal(); loadInvestors(); }
-    else { alert("Errore nel salvataggio"); }
+    if (!error) { 
+      window.closeModal(); 
+      loadInvestors(); 
+    } else { 
+      console.error(error);
+      alert("Errore RLS o Formato: " + error.message); 
+    }
+    btn.disabled = false;
+    btn.textContent = "Salva";
   };
 
   document.getElementById('search').addEventListener('input', render);
