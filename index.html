@@ -121,7 +121,7 @@
     <div class="col-header">Stage</div>
     <div class="col-header">Settori</div>
     <div class="col-header">Founder network</div>
-    <div class="col-header">Mio Status</div>
+    <div class="col-header">Status</div>
   </div>
   <div id="list"></div>
 </div>
@@ -145,7 +145,7 @@
       <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
     <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text" placeholder="SaaS, Fintech..."></div>
-    <div class="form-group"><label class="form-label">Note</label><input class="form-input" id="f-note" type="text"></div>
+    <div class="form-group"><label class="form-label">Descrizione</label><input class="form-input" id="f-note" type="text"></div>
     <div class="modal-actions">
       <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
       <button class="btn-save" onclick="addInvestor()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer">Salva</button>
@@ -243,11 +243,11 @@
               <div class="detail-block">
                   <div class="detail-block-label">Mio Stato Personale</div>
                   <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
-                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato da me</option>
-                      <option value="Contattato" ${isMe ? 'selected' : ''}>Segna come Contattato</option>
+                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato</option>
+                      <option value="Contattato" ${isMe ? 'selected' : ''}>Contattato</option>
                   </select>
               </div>
-              <div class="detail-block"><div class="detail-block-label">Note</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
+              <div class="detail-block"><div class="detail-block-label">Descrizione</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
               <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
           </div>
         </div>
