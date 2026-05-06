@@ -23,8 +23,34 @@
   .logo { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
   .logo span { color: var(--text-faint); font-weight: 400; }
   .pill-founders { font-size: 11px; font-family: var(--mono); background: var(--surface2); color: var(--text-muted); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); }
-  .btn-add { font-family: var(--font); font-size: 13px; font-weight: 500; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-  .stats-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+.btn-add {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  background: #3B4CCA; /* Il blu vivace richiesto */
+  color: #ffffff;
+  border: none;
+  border-radius: 12px; /* Angoli molto arrotondati come da screenshot */
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* Transizione solo sul colore per un effetto pulito */
+  transition: background-color 0.2s ease;
+}
+
+.btn-add:hover {
+  background: #2D3BA5; /* Diventa leggermente più scuro senza muoversi */
+}
+
+/* Dimensioni dell'icona allineate al nuovo stile */
+.btn-add svg {
+  width: 18px;
+  height: 18px;
+}
+.stats-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
   .stat-item { flex: 1; background: var(--surface); padding: 12px 20px; display: flex; flex-direction: column; gap: 2px; }
   .stat-label { font-size: 11px; color: var(--text-faint); font-family: var(--mono); text-transform: uppercase; }
   .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
@@ -70,7 +96,7 @@
 
 <div class="header">
   <div class="header-left">
-    <div class="logo">Investor Hub <span>/ Toolio</span></div>
+    <div class="logo">Investor Hub</div>
     <span class="pill-founders" id="current-user-display">Founder</span>
   </div>
   <button class="btn-add" onclick="openModal()">
@@ -81,7 +107,7 @@
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-label">Totale investitori</div><div class="stat-val" id="stat-total">0</div></div>
-  <div class="stat-item"><div class="stat-label">Miei investitori contattati</div><div class="stat-val" id="stat-contacted">0</div></div>
+  <div class="stat-item"><div class="stat-label">Investitori contattati</div><div class="stat-val" id="stat-contacted">0</div></div>
 </div>
 
 <div class="filters">
@@ -130,7 +156,7 @@
   <div class="modal">
     <h3 style="margin-bottom:20px">Nuovo investitore</h3>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Nome Investitore</label><input class="form-input" id="f-inv-name" type="text"></div>
+      <div class="form-group"><label class="form-label">Investitore</label><input class="form-input" id="f-inv-name" type="text"></div>
       <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
     </div>
     <div class="form-row">
@@ -139,13 +165,18 @@
         <select class="form-input" id="f-new-stage">
             <option value="Seed">Seed</option>
             <option value="Pre-seed">Pre-seed</option>
-            <option value="Series A">Series A</option>
+            <option value="Series A">Post Seed</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
     <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text" placeholder="SaaS, Fintech..."></div>
-    <div class="form-group"><label class="form-label">Descrizione</label><input class="form-input" id="f-note" type="text"></div>
+    
+    <div class="form-group">
+      <label class="form-label">Descrizione</label>
+      <textarea class="form-input" id="f-note" rows="4" style="resize: vertical; min-height: 80px;"></textarea>
+    </div>
+
     <div class="modal-actions">
       <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
       <button class="btn-save" onclick="addInvestor()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer">Salva</button>
@@ -241,7 +272,7 @@
           </div>
           <div class="card-detail" onclick="event.stopPropagation()">
               <div class="detail-block">
-                  <div class="detail-block-label">Mio Stato Personale</div>
+                  <div class="detail-block-label">Status</div>
                   <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
                       <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato</option>
                       <option value="Contattato" ${isMe ? 'selected' : ''}>Contattato</option>
