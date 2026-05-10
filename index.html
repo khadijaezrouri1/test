@@ -6,7 +6,7 @@
 <title>Investor Hub | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* Stili originali mantenuti */
+  /* Base & Variables */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
@@ -17,97 +17,101 @@
     --blue-bg: #EAF0FB; --purple: #4A2E8A; --purple-bg: #F0ECFB;
     --radius: 10px; --radius-sm: 6px; --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
   }
-  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; background-color: #FAFAFA}
-  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  
+  body { font-family: var(--font); background: #FAFAFA; color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+  
+  /* Header */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; border-radius: 22px; margin: 10px; }
   .header-left { display: flex; align-items: center; gap: 10px; }
   .logo { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
-  .logo span { color: var(--text-faint); font-weight: 400; }
-  .pill-founders { font-size: 11px; font-family: var(--mono); background: var(--surface2); color: var(--text-muted); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border);background-color: #F1F5F9 }
-.btn-add {
-  font-family: var(--font);
-  font-size: 14px;
-  font-weight: 500;
-  background: #3B4CCA; /* Il blu vivace richiesto */
-  color: #ffffff;
-  border: none;
-  border-radius: 12px; /* Angoli molto arrotondati come da screenshot */
-  padding: 10px 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  /* Transizione solo sul colore per un effetto pulito */
-  transition: background-color 0.2s ease;
-}
+  .pill-founders { font-size: 11px; font-family: var(--mono); background: #F1F5F9; color: var(--text-muted); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); }
 
-.btn-add:hover {
-  background: #2D3BA5; /* Diventa leggermente più scuro senza muoversi */
-}
-
-/* Dimensioni dell'icona allineate al nuovo stile */
-.btn-add svg {
-  width: 18px;
-  height: 18px;
-}
-.stats-bar { 
-    display: flex; 
-    gap: 20px; /* Aumenta lo spazio visivo tra i due item */
-    padding: 10px; /* Padding esterno per allontanarli dai bordi pagina */
-    background: transparent; 
-    justify-content: center; /* Centralizza gli item orizzontalmente */
-    max-width: 800px; /* Riduce la larghezza massima del contenitore */
-    margin: 0 auto; /* Centra l'intero blocco nella pagina */
-    border-bottom: none; /* Rimuove la linea di separazione per un look più pulito */
-    background-color: #FAFAFA;
-     border-radius: 20px;
+  /* Buttons */
+  .btn-add {
+    font-family: var(--font); font-size: 14px; font-weight: 500;
+    background: #3B4CCA; color: #ffffff; border: none; border-radius: 12px;
+    padding: 10px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+    transition: background-color 0.2s ease;
   }
+  .btn-add:hover { background: #2D3BA5; }
 
-  .stat-item { 
-    flex: 0 1 300px; /* Impedisce alle card di allargarsi troppo (larghezza fissa max 300px) */
-    background: var(--surface); 
-    padding: 24px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 8px; 
-    border-radius: 20px; /* Mantiene l'arrotondamento dello screenshot */
-    border: 1px solid var(--border); 
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); 
-    
+  .btn-filter {
+    background: #EFEFEA; border: 1px solid var(--border); padding: 10px 16px; border-radius: 12px;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-weight: 500; color: var(--text-muted);
+    transition: box-shadow 0.1s ease; outline: none;
   }
+  .btn-filter:hover { background: #EFEFEA; color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong); }
 
-  .stat-label { 
-    font-size: 16px; /* Più grande e leggibile */
-    color: var(--text-muted); 
-    font-family: var(--font); /* Passato da Mono a Sans per matchare lo screenshot */
-    text-transform: none; /* Rimosso l'uppercase per un look più moderno */
+.btn-done-large {
+    background: #3B4CCA; color: white; border: none; padding: 10px 32px;
+    border-radius: 10px; cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 15px;
   }
+  .btn-done-large:hover { background: #3B4CCA !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3); }
 
-  .stat-val { 
-    font-size: 32px; /* Font grande e d'impatto */
-    font-weight: 600; 
-    color: var(--text); 
-    letter-spacing: -0.02em;
+.btn-clear-link {
+    background: #FFFFFF; color: var(--text-muted); border: 1px solid var(--border-strong);
+    padding: 10px 32px; border-radius: 10px; cursor: pointer; font-family: var(--font);
+    font-size: 14px; font-weight: 500; transition: box-shadow 0.1s ease;
   }
-  .filters { padding: 12px 20px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: var(--bg); border-bottom: 1px solid var(--border);background-color: #FAFAFA; }
-  .search-wrap { position: relative; flex: 1; min-width: 200px;}
+  .btn-clear-link:hover { background: #FFFFFF !important; box-shadow: inset 0 0 0 1px var(--text-muted); }
+
+  /* Filter Badges */
+  .filter-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #3B4CCA; color: white; font-size: 11px; font-weight: 600;
+    width: 18px; height: 18px; border-radius: 50%; margin-left: 6px;
+  }
+  .filter-badge:empty { display: none; }
+
+  /* Stats */
+  .stats-bar { display: flex; gap: 20px; padding: 20px; justify-content: center; max-width: 800px; margin: 0 auto; }
+  .stat-item { flex: 0 1 300px; background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 8px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); }
+  .stat-label { font-size: 16px; color: var(--text-muted); }
+  .stat-val { font-size: 32px; font-weight: 600; color: var(--text); }
+
+  /* Filters & Popover */
+  .filters { padding: 12px 20px; display: flex; gap: 8px; align-items: center; position: relative; }
+  .search-wrap { position: relative; flex: 1; }
   .search-wrap input { width: 100%; padding: 8px 12px 8px 34px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
-  select { padding: 7px 10px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; outline: none; font-family: var(--font); }
-  .table-wrap { padding: 16px 20px; background-color: #FAFAFA; border-radius: 20px; }
-  .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px;  }
-  .col-header { font-size: 11px; font-family: var(--font);; text-transform: uppercase; color: var(--text-faint); }
-  .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; overflow: hidden; cursor: pointer; transition: all 0.15s; }
+  
+  .filter-popover {
+    display: none; position: absolute; top: 100%; right: 20px; margin-top: 12px;
+    background: #FFFFFF; border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12); z-index: 1000; padding: 24px; min-width: 320px;
+  }
+  .filter-popover.open { display: block; }
+  .filter-header-section { display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 8px; }
+  .filter-label { font-size: 15px; font-weight: 600; color: var(--text); }
+  .filter-options-container { display: none; padding-bottom: 8px; }
+  .filter-section.active .filter-options-container { display: block; }
+  .filter-section.active .arrow-icon { transform: rotate(180deg); }
+  .filter-option { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 14px; }
+  
+  .filter-checkbox {
+    width: 20px; height: 20px; border: 2px solid var(--border-strong);
+    border-radius: 6px; cursor: pointer; appearance: none; position: relative; background: #fff;
+  }
+  .filter-checkbox:checked { background: #3B4CCA; border-color: #3B4CCA; }
+  .filter-checkbox:checked::after { content: '✓'; position: absolute; color: white; font-size: 12px; left: 4px; top: 0px; font-weight: bold; }
+
+  .popover-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+  /* Table */
+  .table-wrap { padding: 16px 20px; margin: 0 20px; background: white; border-radius: 22px; border: 1px solid var(--border); }
+  .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .col-header { font-size: 11px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; }
+  .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; cursor: pointer; transition: all 0.15s; }
   .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
   .card-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
-  .inv-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .inv-name { font-size: 14px; font-weight: 600; }
   .inv-fund { font-size: 12px; color: var(--text-muted); }
   .tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .tag { font-size: 11px; font-family: var(--mono); padding: 3px 7px; border-radius: 4px; }
+  .tag { font-size: 11px; padding: 3px 7px; border-radius: 4px; font-family: var(--mono); }
   .tag-stage-seed { background: var(--amber-bg); color: var(--amber); }
   .tag-sector { background: var(--surface2); color: var(--text-muted); }
-  .founder-bubbles { display: flex; flex-wrap: wrap; gap: 4px;  }
-  .fbubble { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 2px 8px; color: var(--text-muted); background-color: #F1F5F9; font-weight: bold; color: #1A1A18; }
+  .fbubble { font-size: 11px; background: #F1F5F9; border-radius: 20px; padding: 2px 8px; font-weight: bold; }
   .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; }
   .dot-green { background: var(--green); }
@@ -116,11 +120,13 @@
   .card-detail.open { display: grid; }
   .detail-block-label { font-size: 11px; font-family: var(--font); text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
   .detail-note { font-size: 13px; color: var(--text-muted); font-style: italic; }
+
+  /* Modal */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--surface); border-radius: var(--radius); width: 480px; padding: 24px; }
   .form-group { margin-bottom: 14px; }
-  .form-label { font-size: 12px; font-family: var(--font);; color: var(--text-muted); margin-bottom: 5px; display: block; text-transform: uppercase; }
+  .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; display: block; text-transform: uppercase; }
   .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
@@ -135,7 +141,7 @@
     <span class="pill-founders" id="current-user-display">Founder</span>
   </div>
   <button class="btn-add" onclick="openModal()">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
     Aggiungi
   </button>
 </div>
@@ -150,29 +156,71 @@
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
     <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
   </div>
-  
-  <select id="f-stage" onchange="render()">
-    <option value="">Tutti gli stage</option>
-    <option value="Pre-seed">Pre Seed</option>
-    <option value="Seed">Seed</option>
-    <option value="Series A">Post Seed</option>
-  </select>
 
-  <select id="f-sector" onchange="render()">
-    <option value="">Tutti i settori</option>
-    <option value="Fintech">Fintech</option>
-    <option value="SaaS">SaaS</option>
-    <option value="Deeptech">Deeptech</option>
-    <option value="Climate">Climate</option>
-    <option value="Marketplace">Marketplace</option>
-    <option value="HealthTech">HealthTech</option>
-  </select>
+  <div style="position: relative;">
+    <button class="btn-filter" id="filter-trigger" onclick="toggleFilterMenu(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="9" y1="18" x2="15" y2="18"></line></svg>
+      Filtra
+      <span id="badge-total" class="filter-badge"></span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
 
-  <select id="f-status-filter" onchange="render()">
-    <option value="">Status: Tutti</option>
-    <option value="Contattato">Contattato</option>
-    <option value="Non contattato">Non contattato</option>
-  </select>
+    <div id="filter-menu" class="filter-popover" onclick="event.stopPropagation()">
+      <div class="filter-section active"> 
+        <div class="filter-header-section" onclick="toggleSection(this)">
+          <div style="display:flex; align-items:center">
+            <span class="filter-label">Status</span>
+            <span id="badge-status" class="filter-badge"></span>
+          </div>
+          <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="filter-options-container">
+          <div class="filter-option"><span>Contattato da me</span><input type="checkbox" class="filter-checkbox f-status-cb" value="Contattato" onchange="render()"></div>
+          <div class="filter-option"><span>Non contattato</span><input type="checkbox" class="filter-checkbox f-status-cb" value="Non contattato" onchange="render()"></div>
+        </div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 12px 0;">
+
+      <div class="filter-section active"> 
+        <div class="filter-header-section" onclick="toggleSection(this)">
+          <div style="display:flex; align-items:center">
+            <span class="filter-label">Stage</span>
+            <span id="badge-stage" class="filter-badge"></span>
+          </div>
+          <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="filter-options-container">
+          <div class="filter-option"><span>Pre-seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Pre-seed" onchange="render()"></div>
+          <div class="filter-option"><span>Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Seed" onchange="render()"></div>
+          <div class="filter-option"><span>Post Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Post Seed" onchange="render()"></div>
+        </div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid var(--border); margin: 12px 0;">
+      
+      <div class="filter-section active"> 
+        <div class="filter-header-section" onclick="toggleSection(this)">
+          <div style="display:flex; align-items:center">
+            <span class="filter-label">Settore</span>
+            <span id="badge-sector" class="filter-badge"></span>
+          </div>
+          <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="filter-options-container">
+          <div class="filter-option"><span>SaaS</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="SaaS" onchange="render()"></div>
+          <div class="filter-option"><span>Fintech</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Fintech" onchange="render()"></div>
+          <div class="filter-option"><span>Deeptech</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Deeptech" onchange="render()"></div>
+          <div class="filter-option"><span>Climate</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Climate" onchange="render()"></div>
+        </div>
+      </div>
+
+      <div class="popover-actions">
+        <button class="btn-clear-link" onclick="clearAllFilters()">Cancella tutto</button>
+        <button class="btn-done-large" onclick="toggleFilterMenu(event)">Fatto</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="table-wrap">
@@ -199,21 +247,19 @@
         <select class="form-input" id="f-new-stage">
             <option value="Seed">Seed</option>
             <option value="Pre-seed">Pre-seed</option>
-            <option value="Series A">Post Seed</option>
+            <option value="Post Seed">Post Seed</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
     </div>
     <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text" placeholder="SaaS, Fintech..."></div>
-    
     <div class="form-group">
       <label class="form-label">Descrizione</label>
       <textarea class="form-input" id="f-note" rows="4" style="resize: vertical; min-height: 80px;"></textarea>
     </div>
-
     <div class="modal-actions">
-      <button onclick="closeModal()" style="background:none; border:none; cursor:pointer">Annulla</button>
-      <button class="btn-save" onclick="addInvestor()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer">Salva</button>
+      <button class="btn-clear-link" onclick="closeModal()" >Annulla</button>
+      <button class="btn-done-large" onclick="addInvestor()" >Salva</button>
     </div>
   </div>
 </div>
@@ -226,12 +272,31 @@
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const params = new URLSearchParams(window.location.search);
-  const firstName = params.get('name') || "";
-  const lastName = params.get('lastname') || "";
-  const currentUser = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : "Founder";
+  const currentUser = (params.get('name') || params.get('lastname')) 
+    ? `${params.get('name') || ''} ${params.get('lastname') || ''}`.trim() 
+    : "Founder";
   document.getElementById('current-user-display').textContent = currentUser;
 
   let investors = [];
+
+  // Functions for UI
+  window.toggleFilterMenu = (e) => { 
+    e?.stopPropagation(); 
+    document.getElementById('filter-menu').classList.toggle('open'); 
+  };
+  window.toggleSection = (el) => el.parentElement.classList.toggle('active');
+  window.openModal = () => document.getElementById('modal').classList.add('open');
+  window.closeModal = () => document.getElementById('modal').classList.remove('open');
+  
+  window.clearAllFilters = () => { 
+    document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false); 
+    render(); 
+  };
+
+  // Close menu on click outside
+  window.addEventListener('click', () => {
+    document.getElementById('filter-menu').classList.remove('open');
+  });
 
   async function loadInvestors() {
     const { data, error } = await supabase.from('investors').select('*').order('created_at', { ascending: false });
@@ -250,38 +315,46 @@
     selectEl.disabled = true;
     const inv = investors.find(i => i.id === id);
     let updatedFounders = [...inv.founders];
-
     if (newStatus === 'Contattato') {
       if (!updatedFounders.includes(currentUser)) updatedFounders.push(currentUser);
     } else {
       updatedFounders = updatedFounders.filter(f => f !== currentUser);
     }
-
     const { error } = await supabase.from('investors').update({ founders: updatedFounders }).eq('id', id);
-    if (!error) {
-        inv.founders = updatedFounders;
-        render();
-    } else {
-        alert("Errore: " + error.message);
-        selectEl.disabled = false;
-    }
+    if (!error) { inv.founders = updatedFounders; render(); } 
+    else { alert("Errore: " + error.message); selectEl.disabled = false; }
   }
 
   window.render = function() {
     const q = document.getElementById('search').value.toLowerCase();
-    const fStage = document.getElementById('f-stage').value;
-    const fSector = document.getElementById('f-sector').value;
-    const fStatus = document.getElementById('f-status-filter').value;
+    
+    // Get checked values
+    const selectedStatus = Array.from(document.querySelectorAll('.f-status-cb:checked')).map(cb => cb.value);
+    const selectedStages = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
+    const selectedSectors = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
+
+    // Update Badges
+    document.getElementById('badge-status').textContent = selectedStatus.length || '';
+    document.getElementById('badge-stage').textContent = selectedStages.length || '';
+    document.getElementById('badge-sector').textContent = selectedSectors.length || '';
+    const totalFilters = selectedStatus.length + selectedStages.length + selectedSectors.length;
+    document.getElementById('badge-total').textContent = totalFilters || '';
 
     const filtered = investors.filter(inv => {
       const matchSearch = (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q));
-      const matchStage = !fStage || inv.stage.includes(fStage);
-      const matchSector = !fSector || inv.sectors.some(s => s.toLowerCase() === fSector.toLowerCase());
+      
+      const matchStage = selectedStages.length === 0 || inv.stage.some(s => selectedStages.includes(s));
+      const matchSector = selectedSectors.length === 0 || inv.sectors.some(s => selectedSectors.includes(s));
       
       const isMe = inv.founders.includes(currentUser);
       let matchStatus = true;
-      if (fStatus === 'Contattato') matchStatus = isMe;
-      if (fStatus === 'Non contattato') matchStatus = !isMe;
+      if (selectedStatus.length > 0) {
+        const wantsContacted = selectedStatus.includes('Contattato');
+        const wantsNotContacted = selectedStatus.includes('Non contattato');
+        if (wantsContacted && wantsNotContacted) matchStatus = true;
+        else if (wantsContacted) matchStatus = isMe;
+        else if (wantsNotContacted) matchStatus = !isMe;
+      }
 
       return matchSearch && matchStage && matchSector && matchStatus;
     });
@@ -298,7 +371,7 @@
             <div><div class="inv-name">${inv.name}</div><div class="inv-fund">${inv.fund}</div></div>
             <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
             <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
-            <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '<span class="fbubble-none">—</span>'}</div>
+            <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '—'}</div>
             <div class="status-chip">
               <span class="dot ${isMe ? 'dot-green' : 'dot-gray'}"></span>
               ${isMe ? 'Contattato' : 'Non contattato'}
@@ -320,25 +393,16 @@
     }).join('');
   }
 
-  window.openModal = () => document.getElementById('modal').classList.add('open');
-  window.closeModal = () => document.getElementById('modal').classList.remove('open');
-
   window.addInvestor = async function() {
     const invName = document.getElementById('f-inv-name').value.trim();
     const fund = document.getElementById('f-fund').value.trim();
     const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim()).filter(Boolean);
-    
     if (!invName || !fund) { alert("Inserisci Nome e Fondo"); return; }
 
     const { error } = await supabase.from('investors').insert([{
-      name: invName, 
-      fund: fund, 
-      stage: [document.getElementById('f-new-stage').value],
-      sectors, 
-      ticket: document.getElementById('f-ticket').value,
-      status: 'Mai contattato', 
-      founders: [], 
-      description: document.getElementById('f-note').value
+      name: invName, fund, stage: [document.getElementById('f-new-stage').value],
+      sectors, ticket: document.getElementById('f-ticket').value,
+      founders: [], description: document.getElementById('f-note').value
     }]);
 
     if (!error) { window.closeModal(); loadInvestors(); }
