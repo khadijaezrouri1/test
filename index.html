@@ -106,7 +106,18 @@
   .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
   .card-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
   .inv-name { font-size: 14px; font-weight: 600; }
-  .inv-fund { font-size: 12px; color: var(--text-muted); }
+  .inv-fund { font-size: 12px; color: black; font-weight: bold; }
+  .fund-bubble {
+  display: inline-block;
+  background-color: #f6cece; 
+  color: #991B1B;            
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  margin-top: 4px;
+  margin-left: -4px;
+  font-weight: bold;
+}
   .tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .tag { font-size: 11px; padding: 3px 7px; border-radius: 4px; font-family: var(--mono); }
   .tag-stage-seed { background: var(--amber-bg); color: var(--amber); }
@@ -131,6 +142,120 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
   .select-status { width: 100%; margin-top: 4px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 5px; }
+
+  /* VIEW TOGGLE */
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    background: #EFEFEA;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 3px;
+    margin-left: 4px;
+  }
+  .view-btn {
+    background: none; border: none; border-radius: 7px;
+    padding: 6px 10px; cursor: pointer; color: var(--text-faint);
+    display: flex; align-items: center; transition: all 0.15s;
+  }
+  .view-btn.active { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
+  .view-btn svg { width: 16px; height: 16px; display: block; }
+
+  /* KANBAN */
+  .kanban-wrap {
+    display: none;
+    padding: 16px 20px;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .kanban-wrap.active { display: grid; }
+  .table-wrap.hidden  { display: none; }
+
+  .kanban-col {
+    background: #F5F4F0;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .kanban-col-header {
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+  .kanban-col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .kanban-col-dot-gray  { background: var(--text-faint); }
+  .kanban-col-dot-green { background: var(--green); }
+  .kanban-col-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-muted);
+  }
+  .kanban-col-count {
+    margin-left: auto; font-size: 11px; font-family: var(--mono);
+    background: #EFEFEA; border: 1px solid var(--border);
+    border-radius: 20px; padding: 1px 8px; color: var(--text-faint);
+  }
+  .kanban-cards { padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 100px; }
+
+  .kanban-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .kanban-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .kanban-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .kanban-card-fund { font-size: 11px; color: black;  font-weight: bold; }
+  .kanban-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .kanban-card-founders { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .kanban-empty { text-align: center; padding: 28px 16px; color: var(--text-faint); font-size: 12px; }
+
+
+  /* DRAG & DROP */
+  .kanban-card[draggable="true"] { cursor: grab; }
+  .kanban-card[draggable="true"]:active { cursor: grabbing; }
+
+  .kanban-card.dragging {
+    opacity: 0.4;
+    transform: scale(0.98);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .kanban-cards.drag-over {
+    background: rgba(59,76,202,0.05);
+    outline: 2px dashed #3B4CCA;
+    outline-offset: -4px;
+    border-radius: 10px;
+  }
+
+  .drop-placeholder {
+    height: 72px;
+    border: 2px dashed #3B4CCA;
+    border-radius: 10px;
+    background: rgba(59,76,202,0.04);
+    margin-bottom: 0;
+    pointer-events: none;
+  }
+
+  .kanban-card.saving {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .kanban-card.saving::after {
+    content: '';
+    display: block;
+    width: 14px; height: 14px;
+    border: 2px solid #3B4CCA;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin: 6px auto 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
 </style>
 </head>
 <body>
@@ -194,6 +319,8 @@
           <div class="filter-option"><span>Pre-seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Pre-seed" onchange="render()"></div>
           <div class="filter-option"><span>Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Seed" onchange="render()"></div>
           <div class="filter-option"><span>Post Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Post Seed" onchange="render()"></div>
+          <div class="filter-option"><span>Series A</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Series A" onchange="render()"></div>
+
         </div>
       </div>
 
@@ -220,6 +347,35 @@
         <button class="btn-done-large" onclick="toggleFilterMenu(event)">Fatto</button>
       </div>
     </div>
+  </div>
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="btn-list" onclick="setView('list')" title="Lista">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="2" y1="12" x2="14" y2="12"/></svg>
+    </button>
+    <button class="view-btn" id="btn-kanban" onclick="setView('kanban')" title="Kanban">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="2" width="6" height="12" rx="1.5"/><rect x="9" y="2" width="6" height="12" rx="1.5"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- KANBAN VIEW -->
+<div class="kanban-wrap" id="kanban-wrap">
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span class="kanban-col-dot kanban-col-dot-gray"></span>
+      <span class="kanban-col-title">Non contattato</span>
+      <span class="kanban-col-count" id="k-count-no">0</span>
+    </div>
+    <div class="kanban-cards" id="k-col-no"></div>
+  </div>
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span class="kanban-col-dot kanban-col-dot-green"></span>
+      <span class="kanban-col-title">Contattato</span>
+      <span class="kanban-col-count" id="k-count-yes">0</span>
+    </div>
+    <div class="kanban-cards" id="k-col-yes"></div>
   </div>
 </div>
 
@@ -248,6 +404,7 @@
             <option value="Seed">Seed</option>
             <option value="Pre-seed">Pre-seed</option>
             <option value="Post Seed">Post Seed</option>
+            <option value="Series A">Series A</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
@@ -366,9 +523,9 @@
     list.innerHTML = filtered.map(inv => {
       const isMe = inv.founders.includes(currentUser);
       return `
-        <div class="investor-card">
+        <div class="investor-card" data-id="${inv.id}">
           <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
-            <div><div class="inv-name">${inv.name}</div><div class="inv-fund">${inv.fund}</div></div>
+            <div><div class="inv-name">${inv.name}</div><span class="fund-bubble"><div class="inv-fund">${inv.fund}</div></span></div>
             <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
             <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
             <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '—'}</div>
@@ -377,7 +534,7 @@
               ${isMe ? 'Contattato' : 'Non contattato'}
             </div>
           </div>
-          <div class="card-detail" onclick="event.stopPropagation()">
+          <div class="card-detail" data-detail="${inv.id}" onclick="event.stopPropagation()">
               <div class="detail-block">
                   <div class="detail-block-label">Status</div>
                   <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
@@ -407,6 +564,185 @@
 
     if (!error) { window.closeModal(); loadInvestors(); }
     else { alert("Errore: " + error.message); }
+  };
+
+
+  // ── view toggle ───────────────────────────────────────────
+  let currentView = 'list';
+
+  window.setView = function(view) {
+    currentView = view;
+    const tableWrap  = document.querySelector('.table-wrap');
+    const kanbanWrap = document.getElementById('kanban-wrap');
+    const btnList    = document.getElementById('btn-list');
+    const btnKanban  = document.getElementById('btn-kanban');
+    if (view === 'list') {
+      tableWrap.classList.remove('hidden');
+      kanbanWrap.classList.remove('active');
+      btnList.classList.add('active');
+      btnKanban.classList.remove('active');
+    } else {
+      tableWrap.classList.add('hidden');
+      kanbanWrap.classList.add('active');
+      btnKanban.classList.add('active');
+      btnList.classList.remove('active');
+      renderKanban();
+    }
+  };
+
+  function getFiltered() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const selectedStages  = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
+    const selectedSectors = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
+    return investors.filter(inv => {
+      const mq = inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q);
+      const ms = selectedStages.length  === 0 || inv.stage.some(s => selectedStages.includes(s));
+      const mc = selectedSectors.length === 0 || inv.sectors.some(s => selectedSectors.includes(s));
+      return mq && ms && mc;
+    });
+  }
+
+  // drag state
+  let draggedId   = null;
+  let dragSource  = null; // 'no' | 'yes'
+
+  function cardHTML(inv, col) {
+    const stageTags  = inv.stage.slice(0,2).map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('');
+    const sectorTags = inv.sectors.slice(0,2).map(s => `<span class="tag tag-sector">${s}</span>`).join('');
+    const bubbles    = inv.founders.length > 0
+      ? `<div class="kanban-card-founders">${inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('')}</div>`
+      : '';
+    return `<div class="kanban-card"
+        draggable="true"
+        data-inv-id="${inv.id}"
+        data-col="${col}"
+        onclick="openDetailFromKanban('${inv.id}')">
+      <div class="kanban-card-name">${inv.name}</div>
+      <span class="fund-bubble"><div class="kanban-card-fund">${inv.fund}</div></span>
+      <div class="kanban-card-tags">${stageTags}${sectorTags}</div>
+      ${bubbles}
+    </div>`;
+  }
+
+  function renderKanban() {
+    const filtered     = getFiltered();
+    const notContacted = filtered.filter(inv => !inv.founders.includes(currentUser));
+    const contacted    = filtered.filter(inv =>  inv.founders.includes(currentUser));
+
+    document.getElementById('k-count-no').textContent  = notContacted.length;
+    document.getElementById('k-count-yes').textContent = contacted.length;
+
+    const colNo  = document.getElementById('k-col-no');
+    const colYes = document.getElementById('k-col-yes');
+    colNo.innerHTML  = notContacted.length > 0 ? notContacted.map(inv => cardHTML(inv,'no')).join('')  : '<div class="kanban-empty">Nessun investitore</div>';
+    colYes.innerHTML = contacted.length    > 0 ? contacted.map(inv => cardHTML(inv,'yes')).join('')    : '<div class="kanban-empty">Nessun investitore contattato</div>';
+
+    setupDragListeners();
+  }
+
+  function setupDragListeners() {
+    // Card drag events
+    document.querySelectorAll('.kanban-card[draggable]').forEach(card => {
+      card.addEventListener('dragstart', e => {
+        draggedId  = card.dataset.invId;
+        dragSource = card.dataset.col;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', draggedId);
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+        document.querySelectorAll('.kanban-cards').forEach(c => c.classList.remove('drag-over'));
+      });
+    });
+
+    // Column drop zones
+    document.querySelectorAll('.kanban-cards').forEach(col => {
+      col.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        col.classList.add('drag-over');
+
+        // Show placeholder
+        let ph = col.querySelector('.drop-placeholder');
+        if (!ph) {
+          ph = document.createElement('div');
+          ph.className = 'drop-placeholder';
+          col.appendChild(ph);
+        }
+      });
+
+      col.addEventListener('dragleave', e => {
+        if (!col.contains(e.relatedTarget)) {
+          col.classList.remove('drag-over');
+          col.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+        }
+      });
+
+      col.addEventListener('drop', async e => {
+        e.preventDefault();
+        col.classList.remove('drag-over');
+        col.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+
+        const targetCol = col.id === 'k-col-yes' ? 'yes' : 'no';
+        if (!draggedId || dragSource === targetCol) return;
+
+        // Optimistic UI: move card visually
+        const inv = investors.find(i => i.id === draggedId);
+        if (!inv) return;
+
+        // Update founders array
+        let updatedFounders = [...inv.founders];
+        if (targetCol === 'yes') {
+          if (!updatedFounders.includes(currentUser)) updatedFounders.push(currentUser);
+        } else {
+          updatedFounders = updatedFounders.filter(f => f !== currentUser);
+        }
+
+        // Optimistic update in memory
+        inv.founders = updatedFounders;
+        renderKanban();
+
+        // Save to Supabase
+        const { error } = await supabase
+          .from('investors')
+          .update({ founders: updatedFounders })
+          .eq('id', draggedId);
+
+        if (error) {
+          alert('Errore nel salvataggio: ' + error.message);
+          // Revert
+          inv.founders = targetCol === 'yes'
+            ? updatedFounders.filter(f => f !== currentUser)
+            : [...updatedFounders, currentUser];
+          renderKanban();
+        }
+
+        draggedId  = null;
+        dragSource = null;
+      });
+    });
+  }
+
+  window.openDetailFromKanban = function(id) {
+    setView('list');
+    // Open the card detail after switching to list
+    setTimeout(() => {
+      const card   = document.querySelector(`[data-id="${id}"]`);
+      const detail = document.querySelector(`[data-detail="${id}"]`);
+      if (detail && !detail.classList.contains('open')) {
+        detail.classList.add('open');
+        card && card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  };
+
+  // Patch render to also refresh kanban when active
+  const _baseRender = window.render;
+  window.render = function() {
+    _baseRender();
+    if (currentView === 'kanban') renderKanban();
   };
 
   loadInvestors();
