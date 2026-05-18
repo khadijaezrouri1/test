@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Investor Hub | Founder Only</title>
+<title>Investor Repo | Founder Only</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* Base & Variables */
@@ -12,10 +12,14 @@
     --bg: #F5F4F0; --surface: #FFFFFF; --surface2: #EFEFEA;
     --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.14);
     --text: #1A1A18; --text-muted: #6B6B65; --text-faint: #A0A09A;
-    --accent: #1A1A18; --green: #1D7A52; --green-bg: #E8F5EE;
-    --amber: #8A5A00; --amber-bg: #FDF3DC; --blue: #1A4A8A;
-    --blue-bg: #EAF0FB; --purple: #4A2E8A; --purple-bg: #F0ECFB;
-    --radius: 10px; --radius-sm: 6px; --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+    --accent: #1A1A18; --radius: 10px; --radius-sm: 6px; --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+    
+    /* Bubble Colors */
+    --c-fund-bg: #f6cece; --c-fund-text: #991B1B;
+    --c-stage-bg: #FEF3C7; --c-stage-text: #92400E;
+    --c-company-bg: #DBEAFE; --c-company-text: #1E40AF;
+    --c-founder-bg: #F1F5F9; --c-founder-text: #475569;
+    --c-prospect-bg: #F0FDF4; --c-prospect-text: #166534;
   }
   
   body { font-family: var(--font); background: #FAFAFA; color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
@@ -43,26 +47,18 @@
   }
   .btn-filter:hover { background: #EFEFEA; color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong); }
 
-.btn-done-large {
+  .btn-done-large {
     background: #3B4CCA; color: white; border: none; padding: 10px 32px;
     border-radius: 10px; cursor: pointer; font-family: var(--font); font-weight: 600; font-size: 15px;
   }
   .btn-done-large:hover { background: #3B4CCA !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3); }
 
-.btn-clear-link {
+  .btn-clear-link {
     background: #FFFFFF; color: var(--text-muted); border: 1px solid var(--border-strong);
     padding: 10px 32px; border-radius: 10px; cursor: pointer; font-family: var(--font);
     font-size: 14px; font-weight: 500; transition: box-shadow 0.1s ease;
   }
   .btn-clear-link:hover { background: #FFFFFF !important; box-shadow: inset 0 0 0 1px var(--text-muted); }
-
-  /* Filter Badges */
-  .filter-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #3B4CCA; color: white; font-size: 11px; font-weight: 600;
-    width: 18px; height: 18px; border-radius: 50%; margin-left: 6px;
-  }
-  .filter-badge:empty { display: none; }
 
   /* Stats */
   .stats-bar { display: flex; gap: 20px; padding: 20px; justify-content: center; max-width: 800px; margin: 0 auto; }
@@ -97,172 +93,87 @@
   .filter-checkbox:checked::after { content: '✓'; position: absolute; color: white; font-size: 12px; left: 4px; top: 0px; font-weight: bold; }
 
   .popover-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .filter-badge { display: inline-flex; align-items: center; justify-content: center; background: #3B4CCA; color: white; font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; margin-left: 6px; }
+  .filter-badge:empty { display: none; }
 
-  /* Table */
+  /* Table — 3 columns now (no Stage) */
   .table-wrap { padding: 16px 20px; margin: 0 20px; background: white; border-radius: 22px; border: 1px solid var(--border); }
-  .table-header { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .table-header { display: grid; grid-template-columns: 2fr 2fr 2fr; padding: 0 16px 8px; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
   .col-header { font-size: 11px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; }
   .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; cursor: pointer; transition: all 0.15s; }
   .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-  .card-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
-  .inv-name { font-size: 14px; font-weight: 600; }
-  .inv-fund { font-size: 12px; color: black; font-weight: bold; }
-  .fund-bubble {
-  display: inline-block;
-  background-color: #f6cece; 
-  color: #991B1B;            
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  margin-top: 4px;
-  margin-left: -4px;
-  font-weight: bold;
-}
-  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .tag { font-size: 11px; padding: 3px 7px; border-radius: 4px; font-family: var(--mono); }
-  .tag-stage-seed { background: var(--amber-bg); color: var(--amber); }
-  .tag-sector { background: var(--surface2); color: var(--text-muted); }
-  .fbubble { font-size: 11px; background: #F1F5F9; border-radius: 20px; padding: 2px 8px; font-weight: bold; }
-  .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; }
-  .dot-green { background: var(--green); }
-  .dot-gray { background: var(--text-faint); }
-  .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .card-detail.open { display: grid; }
-  .detail-block-label { font-size: 11px; font-family: var(--font); text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
+  .card-row { display: grid; grid-template-columns: 2fr 2fr 2fr; align-items: center; padding: 14px 16px; gap: 12px; }
+  .inv-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+
+  /* Unified Bubble System */
+  .bubble {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .bubble-fund { background: var(--c-fund-bg); color: var(--c-fund-text); margin-left: -2px; }
+  .bubble-stage { background: var(--c-stage-bg); color: var(--c-stage-text); }
+  .bubble-prospect { background: var(--c-prospect-bg); color: var(--c-prospect-text); border: 1px solid #86efac; }
+  .bubble-company { background: var(--c-company-bg); color: var(--c-company-text); }
+  .bubble-founder { background: var(--c-founder-bg); color: var(--c-founder-text); border: 1px solid var(--border); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 2px; }
+
+  /* Detail panel — reworked */
+  .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); gap: 20px; }
+  .card-detail.open { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .detail-block-label { font-size: 11px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; font-weight: 600; }
   .detail-note { font-size: 13px; color: var(--text-muted); font-style: italic; }
+
+  /* Ticket block redesign */
+  .ticket-block { display: flex; flex-direction: column; gap: 8px; }
+  .ticket-entry {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .ticket-amount { font-size: 15px; font-weight: 600; color: var(--text); }
+  .ticket-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ticket-stage-pill {
+    display: inline-flex; align-items: center; padding: 2px 8px;
+    border-radius: 20px; font-size: 10px; font-weight: 700;
+    background: var(--c-stage-bg); color: var(--c-stage-text);
+  }
+  .ticket-stage-pill.prospect {
+    background: var(--c-prospect-bg); color: var(--c-prospect-text); border: 1px solid #86efac;
+  }
+  .ticket-empty {
+    font-size: 13px; color: var(--text-faint); font-style: italic;
+  }
 
   /* Modal */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal { background: var(--surface); border-radius: var(--radius); width: 480px; padding: 24px; }
+  .modal { background: var(--surface); border-radius: var(--radius); width: 520px; padding: 24px; }
   .form-group { margin-bottom: 14px; }
   .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; display: block; text-transform: uppercase; }
-  .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; }
+  .form-label .req { color: #991B1B; margin-left: 2px; }
+  .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; font-family: var(--font); font-size: 14px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-  .select-status { width: 100%; margin-top: 4px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 5px; }
-
-  /* VIEW TOGGLE */
-  .view-toggle {
-    display: flex;
-    gap: 2px;
-    background: #EFEFEA;
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    padding: 3px;
-    margin-left: 4px;
-  }
-  .view-btn {
-    background: none; border: none; border-radius: 7px;
-    padding: 6px 10px; cursor: pointer; color: var(--text-faint);
-    display: flex; align-items: center; transition: all 0.15s;
-  }
-  .view-btn.active { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
-  .view-btn svg { width: 16px; height: 16px; display: block; }
-
-  /* KANBAN */
-  .kanban-wrap {
-    display: none;
-    padding: 16px 20px;
-    gap: 16px;
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
-  .kanban-wrap.active { display: grid; }
-  .table-wrap.hidden  { display: none; }
-
-  .kanban-col {
-    background: #F5F4F0;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-  .kanban-col-header {
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 8px;
-    background: #fff;
-    border-bottom: 1px solid var(--border);
-  }
-  .kanban-col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .kanban-col-dot-gray  { background: var(--text-faint); }
-  .kanban-col-dot-green { background: var(--green); }
-  .kanban-col-title {
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--text-muted);
-  }
-  .kanban-col-count {
-    margin-left: auto; font-size: 11px; font-family: var(--mono);
-    background: #EFEFEA; border: 1px solid var(--border);
-    border-radius: 20px; padding: 1px 8px; color: var(--text-faint);
-  }
-  .kanban-cards { padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 100px; }
-
-  .kanban-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .kanban-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-  .kanban-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-  .kanban-card-fund { font-size: 11px; color: black;  font-weight: bold; }
-  .kanban-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .kanban-card-founders { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-  .kanban-empty { text-align: center; padding: 28px 16px; color: var(--text-faint); font-size: 12px; }
-
-
-  /* DRAG & DROP */
-  .kanban-card[draggable="true"] { cursor: grab; }
-  .kanban-card[draggable="true"]:active { cursor: grabbing; }
-
-  .kanban-card.dragging {
-    opacity: 0.4;
-    transform: scale(0.98);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  }
-
-  .kanban-cards.drag-over {
-    background: rgba(59,76,202,0.05);
-    outline: 2px dashed #3B4CCA;
-    outline-offset: -4px;
-    border-radius: 10px;
-  }
-
-  .drop-placeholder {
-    height: 72px;
-    border: 2px dashed #3B4CCA;
-    border-radius: 10px;
-    background: rgba(59,76,202,0.04);
-    margin-bottom: 0;
-    pointer-events: none;
-  }
-
-  .kanban-card.saving {
-    opacity: 0.6;
-    pointer-events: none;
-  }
-  .kanban-card.saving::after {
-    content: '';
-    display: block;
-    width: 14px; height: 14px;
-    border: 2px solid #3B4CCA;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-    margin: 6px auto 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-left">
-    <div class="logo">Investor Hub</div>
+    <div class="logo">BakeBoard</div>
     <span class="pill-founders" id="current-user-display">Founder</span>
   </div>
   <button class="btn-add" onclick="openModal()">
@@ -273,7 +184,6 @@
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-label">Totale investitori</div><div class="stat-val" id="stat-total">0</div></div>
-  <div class="stat-item"><div class="stat-label">Investitori contattati</div><div class="stat-val" id="stat-contacted">0</div></div>
 </div>
 
 <div class="filters">
@@ -294,33 +204,17 @@
       <div class="filter-section active"> 
         <div class="filter-header-section" onclick="toggleSection(this)">
           <div style="display:flex; align-items:center">
-            <span class="filter-label">Status</span>
-            <span id="badge-status" class="filter-badge"></span>
-          </div>
-          <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </div>
-        <div class="filter-options-container">
-          <div class="filter-option"><span>Contattato da me</span><input type="checkbox" class="filter-checkbox f-status-cb" value="Contattato" onchange="render()"></div>
-          <div class="filter-option"><span>Non contattato</span><input type="checkbox" class="filter-checkbox f-status-cb" value="Non contattato" onchange="render()"></div>
-        </div>
-      </div>
-
-      <hr style="border: 0; border-top: 1px solid var(--border); margin: 12px 0;">
-
-      <div class="filter-section active"> 
-        <div class="filter-header-section" onclick="toggleSection(this)">
-          <div style="display:flex; align-items:center">
             <span class="filter-label">Stage</span>
             <span id="badge-stage" class="filter-badge"></span>
           </div>
           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
         <div class="filter-options-container">
+          <div class="filter-option"><span>Prospect</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Prospect" onchange="render()"></div>
           <div class="filter-option"><span>Pre-seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Pre-seed" onchange="render()"></div>
           <div class="filter-option"><span>Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Seed" onchange="render()"></div>
           <div class="filter-option"><span>Post Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Post Seed" onchange="render()"></div>
           <div class="filter-option"><span>Series A</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Series A" onchange="render()"></div>
-
         </div>
       </div>
 
@@ -329,16 +223,19 @@
       <div class="filter-section active"> 
         <div class="filter-header-section" onclick="toggleSection(this)">
           <div style="display:flex; align-items:center">
-            <span class="filter-label">Settore</span>
+            <span class="filter-label">Società</span>
             <span id="badge-sector" class="filter-badge"></span>
           </div>
           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
         <div class="filter-options-container">
-          <div class="filter-option"><span>SaaS</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="SaaS" onchange="render()"></div>
-          <div class="filter-option"><span>Fintech</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Fintech" onchange="render()"></div>
-          <div class="filter-option"><span>Deeptech</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Deeptech" onchange="render()"></div>
-          <div class="filter-option"><span>Climate</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Climate" onchange="render()"></div>
+          <div class="filter-option"><span>SB</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="SB" onchange="render()"></div>
+          <div class="filter-option"><span>Condeo</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Condeo" onchange="render()"></div>
+          <div class="filter-option"><span>Donux</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Donux" onchange="render()"></div>
+          <div class="filter-option"><span>ESGmax</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="ESGmax" onchange="render()"></div>
+          <div class="filter-option"><span>Kontai</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Kontai" onchange="render()"></div>
+          <div class="filter-option"><span>Sencare</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Sencare" onchange="render()"></div>
+          <div class="filter-option"><span>Veterly</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Veterly" onchange="render()"></div>
         </div>
       </div>
 
@@ -348,75 +245,62 @@
       </div>
     </div>
   </div>
-
-  <div class="view-toggle">
-    <button class="view-btn active" id="btn-list" onclick="setView('list')" title="Lista">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="2" y1="12" x2="14" y2="12"/></svg>
-    </button>
-    <button class="view-btn" id="btn-kanban" onclick="setView('kanban')" title="Kanban">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="2" width="6" height="12" rx="1.5"/><rect x="9" y="2" width="6" height="12" rx="1.5"/></svg>
-    </button>
-  </div>
 </div>
 
-<!-- KANBAN VIEW -->
-<div class="kanban-wrap" id="kanban-wrap">
-  <div class="kanban-col">
-    <div class="kanban-col-header">
-      <span class="kanban-col-dot kanban-col-dot-gray"></span>
-      <span class="kanban-col-title">Non contattato</span>
-      <span class="kanban-col-count" id="k-count-no">0</span>
-    </div>
-    <div class="kanban-cards" id="k-col-no"></div>
-  </div>
-  <div class="kanban-col">
-    <div class="kanban-col-header">
-      <span class="kanban-col-dot kanban-col-dot-green"></span>
-      <span class="kanban-col-title">Contattato</span>
-      <span class="kanban-col-count" id="k-count-yes">0</span>
-    </div>
-    <div class="kanban-cards" id="k-col-yes"></div>
-  </div>
-</div>
-
+<!-- Table: 3 columns, no Stage -->
 <div class="table-wrap">
   <div class="table-header">
     <div class="col-header">Investitore</div>
-    <div class="col-header">Stage</div>
-    <div class="col-header">Settori</div>
+    <div class="col-header">Società</div>
     <div class="col-header">Founder network</div>
-    <div class="col-header">Status</div>
   </div>
   <div id="list"></div>
 </div>
 
+<!-- Modal: no Società (from URL), no P.IVA obbligatorio, email+telefono, Stage con Prospect -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h3 style="margin-bottom:20px">Nuovo investitore</h3>
+    <div class="form-group">
+        <label class="form-label">Partita IVA</label>
+        <input class="form-input" id="f-piva" type="text" placeholder="Opzionale">
+    </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Investitore</label><input class="form-input" id="f-inv-name" type="text"></div>
+      <div class="form-group"><label class="form-label">Investitore <span class="req">*</span></label><input class="form-input" id="f-inv-name" type="text" placeholder="Campo Obbligatorio"></div>
       <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Stage</label>
+        <label class="form-label">Stage <span class="req">*</span></label>
         <select class="form-input" id="f-new-stage">
+            <option value="Prospect">Prospect</option>
             <option value="Seed">Seed</option>
             <option value="Pre-seed">Pre-seed</option>
             <option value="Post Seed">Post Seed</option>
             <option value="Series A">Series A</option>
         </select>
       </div>
-      <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text"></div>
+      <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text" placeholder="Es. 50000"></div>
     </div>
-    <div class="form-group"><label class="form-label">Settori (virgola)</label><input class="form-input" id="f-sectors" type="text" placeholder="SaaS, Fintech..."></div>
+    <!-- Società: hidden, pre-filled from URL -->
+    <input type="hidden" id="f-new-company" value="">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Email <span class="req">*</span></label>
+        <input class="form-input" id="f-email" type="email" placeholder="email@esempio.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefono</label>
+        <input class="form-input" id="f-phone" type="tel" placeholder="+39 000 000 0000">
+      </div>
+    </div>
     <div class="form-group">
       <label class="form-label">Descrizione</label>
       <textarea class="form-input" id="f-note" rows="4" style="resize: vertical; min-height: 80px;"></textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn-clear-link" onclick="closeModal()" >Annulla</button>
-      <button class="btn-done-large" onclick="addInvestor()" >Salva</button>
+      <button class="btn-clear-link" onclick="closeModal()">Annulla</button>
+      <button class="btn-done-large" onclick="addInvestor()">Salva</button>
     </div>
   </div>
 </div>
@@ -428,321 +312,212 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxubmN4Zm5pZ2R6YXJ6eWZ3YWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDM5NTgsImV4cCI6MjA5MzUxOTk1OH0.tySF08HVUwGJ2wkLgA9vKKtZxLJ8agRdvgQW7qlA-t4';
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  // ── URL params ──────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
-  const currentUser = (params.get('name') || params.get('lastname')) 
-    ? `${params.get('name') || ''} ${params.get('lastname') || ''}`.trim() 
+
+  function formatFounderName(fullName) {
+    if (!fullName) return "";
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length < 2) return fullName;
+    return `${parts[0].charAt(0).toUpperCase()}. ${parts.slice(1).join(" ")}`;
+  }
+
+  const rawName = (params.get('name') || params.get('lastname'))
+    ? `${params.get('name') || ''} ${params.get('lastname') || ''}`.trim()
     : "Founder";
+  const currentUser = formatFounderName(rawName);
   document.getElementById('current-user-display').textContent = currentUser;
 
+  // Company from URL (e.g. ?company=Startup%20Bakery → "SB" or raw value)
+  const urlCompany = params.get('company') || '';
+  document.getElementById('f-new-company').value = urlCompany;
+
+  // ── State ───────────────────────────────────────────────────
   let investors = [];
 
-  // Functions for UI
-  window.toggleFilterMenu = (e) => { 
-    e?.stopPropagation(); 
-    document.getElementById('filter-menu').classList.toggle('open'); 
-  };
-  window.toggleSection = (el) => el.parentElement.classList.toggle('active');
-  window.openModal = () => document.getElementById('modal').classList.add('open');
-  window.closeModal = () => document.getElementById('modal').classList.remove('open');
-  
-  window.clearAllFilters = () => { 
-    document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false); 
-    render(); 
-  };
+  // ── UI helpers ──────────────────────────────────────────────
+  window.toggleFilterMenu = (e) => { e?.stopPropagation(); document.getElementById('filter-menu').classList.toggle('open'); };
+  window.toggleSection    = (el) => el.parentElement.classList.toggle('active');
+  window.openModal        = () => document.getElementById('modal').classList.add('open');
+  window.closeModal       = () => document.getElementById('modal').classList.remove('open');
+  window.clearAllFilters  = () => { document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false); render(); };
+  window.addEventListener('click', () => document.getElementById('filter-menu').classList.remove('open'));
 
-  // Close menu on click outside
-  window.addEventListener('click', () => {
-    document.getElementById('filter-menu').classList.remove('open');
-  });
-
+  // ── Load ────────────────────────────────────────────────────
   async function loadInvestors() {
     const { data, error } = await supabase.from('investors').select('*').order('created_at', { ascending: false });
     if (!error) {
       investors = data.map(row => ({
         ...row,
-        stage: Array.isArray(row.stage) ? row.stage : (row.stage ? [row.stage] : []),
-        sectors: Array.isArray(row.sectors) ? row.sectors : (row.sectors ? [row.sectors] : []),
-        founders: Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])
+        stage:    Array.isArray(row.stage)    ? row.stage    : (row.stage    ? [row.stage]    : []),
+        company:  Array.isArray(row.company)  ? row.company  : (row.company  ? [row.company]  : []),
+        founders: (Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])).map(f => formatFounderName(f)),
       }));
       render();
     }
   }
 
-  window.toggleFounderStatus = async function(selectEl, id, newStatus) {
-    selectEl.disabled = true;
-    const inv = investors.find(i => i.id === id);
-    let updatedFounders = [...inv.founders];
-    if (newStatus === 'Contattato') {
-      if (!updatedFounders.includes(currentUser)) updatedFounders.push(currentUser);
-    } else {
-      updatedFounders = updatedFounders.filter(f => f !== currentUser);
+  // ── Ticket renderer (new: amount + company + stage pill) ────
+  function renderTicketBlock(inv) {
+    // ticket string format: "€50.000 in Condeo, €20.000 in Sencare"
+    // stage array: ["Seed", "Prospect"]
+    const ticketStr = inv.ticket || '';
+    const tickets   = ticketStr.split(',').map(t => t.trim()).filter(Boolean);
+
+    if (tickets.length === 0) {
+      const isProspect = inv.stage.some(s => s === 'Prospect');
+      const companyList = inv.company.length > 0 ? inv.company.join(', ') : null;
+      return `<div class="ticket-block">
+        <div class="ticket-empty">Nessun investimento registrato</div>
+        ${isProspect ? `<span class="ticket-stage-pill prospect">Prospect — solo contatto${companyList ? ` · ${companyList}` : ''}</span>` : ''}
+      </div>`;
     }
-    const { error } = await supabase.from('investors').update({ founders: updatedFounders }).eq('id', id);
-    if (!error) { inv.founders = updatedFounders; render(); } 
-    else { alert("Errore: " + error.message); selectEl.disabled = false; }
-  }
 
-  window.render = function() {
-    const q = document.getElementById('search').value.toLowerCase();
-    
-    // Get checked values
-    const selectedStatus = Array.from(document.querySelectorAll('.f-status-cb:checked')).map(cb => cb.value);
-    const selectedStages = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
-    const selectedSectors = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
+    const stageLabel = inv.stage.length > 0 ? inv.stage[inv.stage.length - 1] : '';
+    const isProspect = stageLabel === 'Prospect';
 
-    // Update Badges
-    document.getElementById('badge-status').textContent = selectedStatus.length || '';
-    document.getElementById('badge-stage').textContent = selectedStages.length || '';
-    document.getElementById('badge-sector').textContent = selectedSectors.length || '';
-    const totalFilters = selectedStatus.length + selectedStages.length + selectedSectors.length;
-    document.getElementById('badge-total').textContent = totalFilters || '';
-
-    const filtered = investors.filter(inv => {
-      const matchSearch = (inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q));
-      
-      const matchStage = selectedStages.length === 0 || inv.stage.some(s => selectedStages.includes(s));
-      const matchSector = selectedSectors.length === 0 || inv.sectors.some(s => selectedSectors.includes(s));
-      
-      const isMe = inv.founders.includes(currentUser);
-      let matchStatus = true;
-      if (selectedStatus.length > 0) {
-        const wantsContacted = selectedStatus.includes('Contattato');
-        const wantsNotContacted = selectedStatus.includes('Non contattato');
-        if (wantsContacted && wantsNotContacted) matchStatus = true;
-        else if (wantsContacted) matchStatus = isMe;
-        else if (wantsNotContacted) matchStatus = !isMe;
-      }
-
-      return matchSearch && matchStage && matchSector && matchStatus;
-    });
-
-    document.getElementById('stat-total').textContent = investors.length;
-    document.getElementById('stat-contacted').textContent = investors.filter(i => i.founders.includes(currentUser)).length;
-
-    const list = document.getElementById('list');
-    list.innerHTML = filtered.map(inv => {
-      const isMe = inv.founders.includes(currentUser);
-      return `
-        <div class="investor-card" data-id="${inv.id}">
-          <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
-            <div><div class="inv-name">${inv.name}</div><span class="fund-bubble"><div class="inv-fund">${inv.fund}</div></span></div>
-            <div class="tags">${inv.stage.map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('')}</div>
-            <div class="tags">${inv.sectors.map(s => `<span class="tag tag-sector">${s}</span>`).join('')}</div>
-            <div class="founder-bubbles">${inv.founders.length > 0 ? inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('') : '—'}</div>
-            <div class="status-chip">
-              <span class="dot ${isMe ? 'dot-green' : 'dot-gray'}"></span>
-              ${isMe ? 'Contattato' : 'Non contattato'}
-            </div>
+    return `<div class="ticket-block">
+      ${tickets.map(t => {
+        const inMatch = t.match(/^(.+?)\s+in\s+(.+)$/i);
+        const amount  = inMatch ? inMatch[1] : t;
+        const company = inMatch ? inMatch[2] : '';
+        return `<div class="ticket-entry">
+          <div class="ticket-amount">${amount}</div>
+          <div class="ticket-meta">
+            ${company ? `<span>in <strong>${company}</strong></span>` : ''}
+            <span class="ticket-stage-pill ${isProspect ? 'prospect' : ''}">${stageLabel || '—'}</span>
           </div>
-          <div class="card-detail" data-detail="${inv.id}" onclick="event.stopPropagation()">
-              <div class="detail-block">
-                  <div class="detail-block-label">Status</div>
-                  <select class="select-status" onchange="toggleFounderStatus(this, '${inv.id}', this.value)">
-                      <option value="Non contattato" ${!isMe ? 'selected' : ''}>Non contattato</option>
-                      <option value="Contattato" ${isMe ? 'selected' : ''}>Contattato</option>
-                  </select>
-              </div>
-              <div class="detail-block"><div class="detail-block-label">Descrizione</div><div class="detail-note">${inv.description || 'Nessuna nota'}</div></div>
-              <div class="detail-block"><div class="detail-block-label">Ticket</div><div>${inv.ticket || '—'}</div></div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  window.addInvestor = async function() {
-    const invName = document.getElementById('f-inv-name').value.trim();
-    const fund = document.getElementById('f-fund').value.trim();
-    const sectors = document.getElementById('f-sectors').value.split(',').map(s => s.trim()).filter(Boolean);
-    if (!invName || !fund) { alert("Inserisci Nome e Fondo"); return; }
-
-    const { error } = await supabase.from('investors').insert([{
-      name: invName, fund, stage: [document.getElementById('f-new-stage').value],
-      sectors, ticket: document.getElementById('f-ticket').value,
-      founders: [], description: document.getElementById('f-note').value
-    }]);
-
-    if (!error) { window.closeModal(); loadInvestors(); }
-    else { alert("Errore: " + error.message); }
-  };
-
-
-  // ── view toggle ───────────────────────────────────────────
-  let currentView = 'list';
-
-  window.setView = function(view) {
-    currentView = view;
-    const tableWrap  = document.querySelector('.table-wrap');
-    const kanbanWrap = document.getElementById('kanban-wrap');
-    const btnList    = document.getElementById('btn-list');
-    const btnKanban  = document.getElementById('btn-kanban');
-    if (view === 'list') {
-      tableWrap.classList.remove('hidden');
-      kanbanWrap.classList.remove('active');
-      btnList.classList.add('active');
-      btnKanban.classList.remove('active');
-    } else {
-      tableWrap.classList.add('hidden');
-      kanbanWrap.classList.add('active');
-      btnKanban.classList.add('active');
-      btnList.classList.remove('active');
-      renderKanban();
-    }
-  };
-
-  function getFiltered() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const selectedStages  = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
-    const selectedSectors = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
-    return investors.filter(inv => {
-      const mq = inv.name.toLowerCase().includes(q) || inv.fund.toLowerCase().includes(q);
-      const ms = selectedStages.length  === 0 || inv.stage.some(s => selectedStages.includes(s));
-      const mc = selectedSectors.length === 0 || inv.sectors.some(s => selectedSectors.includes(s));
-      return mq && ms && mc;
-    });
-  }
-
-  // drag state
-  let draggedId   = null;
-  let dragSource  = null; // 'no' | 'yes'
-
-  function cardHTML(inv, col) {
-    const stageTags  = inv.stage.slice(0,2).map(s => `<span class="tag tag-stage-seed">${s}</span>`).join('');
-    const sectorTags = inv.sectors.slice(0,2).map(s => `<span class="tag tag-sector">${s}</span>`).join('');
-    const bubbles    = inv.founders.length > 0
-      ? `<div class="kanban-card-founders">${inv.founders.map(f => `<span class="fbubble">${f}</span>`).join('')}</div>`
-      : '';
-    return `<div class="kanban-card"
-        draggable="true"
-        data-inv-id="${inv.id}"
-        data-col="${col}"
-        onclick="openDetailFromKanban('${inv.id}')">
-      <div class="kanban-card-name">${inv.name}</div>
-      <span class="fund-bubble"><div class="kanban-card-fund">${inv.fund}</div></span>
-      <div class="kanban-card-tags">${stageTags}${sectorTags}</div>
-      ${bubbles}
+        </div>`;
+      }).join('')}
     </div>`;
   }
 
-  function renderKanban() {
-    const filtered     = getFiltered();
-    const notContacted = filtered.filter(inv => !inv.founders.includes(currentUser));
-    const contacted    = filtered.filter(inv =>  inv.founders.includes(currentUser));
-
-    document.getElementById('k-count-no').textContent  = notContacted.length;
-    document.getElementById('k-count-yes').textContent = contacted.length;
-
-    const colNo  = document.getElementById('k-col-no');
-    const colYes = document.getElementById('k-col-yes');
-    colNo.innerHTML  = notContacted.length > 0 ? notContacted.map(inv => cardHTML(inv,'no')).join('')  : '<div class="kanban-empty">Nessun investitore</div>';
-    colYes.innerHTML = contacted.length    > 0 ? contacted.map(inv => cardHTML(inv,'yes')).join('')    : '<div class="kanban-empty">Nessun investitore contattato</div>';
-
-    setupDragListeners();
+  // ── Stage bubble helper ──────────────────────────────────────
+  function stageBubble(s) {
+    const cls = s === 'Prospect' ? 'bubble bubble-prospect' : 'bubble bubble-stage';
+    return `<span class="${cls}">${s}</span>`;
   }
 
-  function setupDragListeners() {
-    // Card drag events
-    document.querySelectorAll('.kanban-card[draggable]').forEach(card => {
-      card.addEventListener('dragstart', e => {
-        draggedId  = card.dataset.invId;
-        dragSource = card.dataset.col;
-        card.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', draggedId);
-      });
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging');
-        document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-        document.querySelectorAll('.kanban-cards').forEach(c => c.classList.remove('drag-over'));
-      });
+  // ── Render ──────────────────────────────────────────────────
+  window.render = function () {
+    const q               = document.getElementById('search').value.toLowerCase();
+    const selectedStages  = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
+    const selectedCompany = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
+
+    document.getElementById('badge-stage').textContent  = selectedStages.length  || '';
+    document.getElementById('badge-sector').textContent = selectedCompany.length  || '';
+    document.getElementById('badge-total').textContent  = (selectedStages.length + selectedCompany.length) || '';
+    document.getElementById('stat-total').textContent   = investors.length;
+
+    const filtered = investors.filter(inv => {
+      const matchSearch  = inv.name.toLowerCase().includes(q) || (inv.fund && inv.fund.toLowerCase().includes(q));
+      const matchStage   = selectedStages.length  === 0 || inv.stage.some(s   => selectedStages.includes(s));
+      const matchCompany = selectedCompany.length === 0 || inv.company.some(c => selectedCompany.includes(c));
+      return matchSearch && matchStage && matchCompany;
     });
 
-    // Column drop zones
-    document.querySelectorAll('.kanban-cards').forEach(col => {
-      col.addEventListener('dragover', e => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        col.classList.add('drag-over');
+    const list = document.getElementById('list');
+    list.innerHTML = filtered.map(inv => `
+      <div class="investor-card" data-id="${inv.id}">
+        <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
+          <div>
+            <div class="inv-name">${inv.name}</div>
+            ${inv.fund ? `<span class="bubble bubble-fund">${inv.fund}</span>` : ''}
+          </div>
+          <div class="tags">
+            ${inv.company.map(c => `<span class="bubble bubble-company">${c}</span>`).join('')}
+          </div>
+          <div class="tags">
+            ${inv.founders.length > 0 ? inv.founders.map(f => `<span class="bubble bubble-founder">${f}</span>`).join('') : '—'}
+          </div>
+        </div>
+        <div class="card-detail" onclick="event.stopPropagation()">
+          <div class="detail-block">
+            <div class="detail-block-label">Descrizione</div>
+            <div class="detail-note">${inv.description || 'Nessuna nota'}</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-block-label">Contatti</div>
+            <div class="detail-note" style="font-style:normal; display:flex; flex-direction:column; gap:4px;">
+              ${inv.email ? `<span>📧 ${inv.email}</span>` : '<span style="color:var(--text-faint); font-style:italic;">Nessuna email</span>'}
+              ${inv.phone ? `<span>📞 ${inv.phone}</span>` : '<span style="color:var(--text-faint); font-style:italic;">Nessun numero</span>'}
+            </div>
 
-        // Show placeholder
-        let ph = col.querySelector('.drop-placeholder');
-        if (!ph) {
-          ph = document.createElement('div');
-          ph.className = 'drop-placeholder';
-          col.appendChild(ph);
-        }
-      });
-
-      col.addEventListener('dragleave', e => {
-        if (!col.contains(e.relatedTarget)) {
-          col.classList.remove('drag-over');
-          col.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-        }
-      });
-
-      col.addEventListener('drop', async e => {
-        e.preventDefault();
-        col.classList.remove('drag-over');
-        col.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-
-        const targetCol = col.id === 'k-col-yes' ? 'yes' : 'no';
-        if (!draggedId || dragSource === targetCol) return;
-
-        // Optimistic UI: move card visually
-        const inv = investors.find(i => i.id === draggedId);
-        if (!inv) return;
-
-        // Update founders array
-        let updatedFounders = [...inv.founders];
-        if (targetCol === 'yes') {
-          if (!updatedFounders.includes(currentUser)) updatedFounders.push(currentUser);
-        } else {
-          updatedFounders = updatedFounders.filter(f => f !== currentUser);
-        }
-
-        // Optimistic update in memory
-        inv.founders = updatedFounders;
-        renderKanban();
-
-        // Save to Supabase
-        const { error } = await supabase
-          .from('investors')
-          .update({ founders: updatedFounders })
-          .eq('id', draggedId);
-
-        if (error) {
-          alert('Errore nel salvataggio: ' + error.message);
-          // Revert
-          inv.founders = targetCol === 'yes'
-            ? updatedFounders.filter(f => f !== currentUser)
-            : [...updatedFounders, currentUser];
-          renderKanban();
-        }
-
-        draggedId  = null;
-        dragSource = null;
-      });
-    });
-  }
-
-  window.openDetailFromKanban = function(id) {
-    setView('list');
-    // Open the card detail after switching to list
-    setTimeout(() => {
-      const card   = document.querySelector(`[data-id="${id}"]`);
-      const detail = document.querySelector(`[data-detail="${id}"]`);
-      if (detail && !detail.classList.contains('open')) {
-        detail.classList.add('open');
-        card && card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 50);
+          </div>
+          <div class="detail-block">
+            <div class="detail-block-label">Investimento</div>
+            ${renderTicketBlock(inv)}
+          </div>
+        </div>
+      </div>
+    `).join('');
   };
 
-  // Patch render to also refresh kanban when active
-  const _baseRender = window.render;
-  window.render = function() {
-    _baseRender();
-    if (currentView === 'kanban') renderKanban();
+  // ── Add investor ────────────────────────────────────────────
+  window.addInvestor = async function () {
+    const piva        = document.getElementById('f-piva').value.trim();
+    const invName     = document.getElementById('f-inv-name').value.trim();
+    const fund        = document.getElementById('f-fund').value.trim();
+    const newStage    = document.getElementById('f-new-stage').value;
+    const newCompany  = document.getElementById('f-new-company').value; // from URL
+    const rawTicket   = document.getElementById('f-ticket').value.trim();
+    const email       = document.getElementById('f-email').value.trim();
+    const phone       = document.getElementById('f-phone').value.trim();
+    const description = document.getElementById('f-note').value;
+
+    // Validation: name + email required
+    if (!invName) { alert("Inserisci il nome dell'investitore"); return; }
+    if (!email)   { alert("Inserisci l'email (obbligatoria)");   return; }
+
+    let formattedTicket = '';
+    if (rawTicket) {
+      const numericTicket = rawTicket.replace(/\D/g, '');
+      if (numericTicket) {
+        const ticketValue = `€${Number(numericTicket).toLocaleString('it-IT')}`;
+        formattedTicket   = newCompany ? `${ticketValue} in ${newCompany}` : ticketValue;
+      }
+    }
+
+    // Try to find existing by p_iva (if provided) or by name+email
+    let existing = null;
+    if (piva) {
+      const { data } = await supabase.from('investors').select('*').eq('p_iva', piva).maybeSingle();
+      existing = data;
+    } else {
+      const { data } = await supabase.from('investors').select('*').ilike('name', invName).maybeSingle();
+      existing = data;
+    }
+
+    if (existing) {
+      const { error } = await supabase.from('investors').update({
+        stage:    Array.from(new Set([...(existing.stage   || []), newStage])).filter(Boolean),
+        company:  Array.from(new Set([...(existing.company || []), newCompany])).filter(Boolean),
+        founders: Array.from(new Set([...(existing.founders || []), currentUser])).filter(Boolean),
+        ticket:   (existing.ticket && formattedTicket && !existing.ticket.includes(formattedTicket))
+                    ? `${existing.ticket}, ${formattedTicket}`
+                    : (existing.ticket || formattedTicket),
+        fund:     existing.fund || fund,
+        email:    existing.email || email,
+        phone:    existing.phone || phone,
+      }).eq('id', existing.id);
+      if (!error) { window.closeModal(); loadInvestors(); }
+      else         { alert("Errore aggiornamento: " + error.message); }
+    } else {
+      const { error } = await supabase.from('investors').insert([{
+        p_iva:       piva || null,
+        name:        invName,
+        fund:        fund || "",
+        stage:       [newStage],
+        company:     newCompany ? [newCompany] : [],
+        ticket:      formattedTicket,
+        founders:    [currentUser],
+        description: description,
+        email:       email,
+        phone:       phone,
+      }]);
+      if (!error) { window.closeModal(); loadInvestors(); }
+      else         { alert("Errore inserimento: " + error.message); }
+    }
   };
 
   loadInvestors();
