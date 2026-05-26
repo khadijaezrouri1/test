@@ -19,7 +19,6 @@
     --c-stage-bg: #FEF3C7; --c-stage-text: #92400E;
     --c-company-bg: #DBEAFE; --c-company-text: #1E40AF;
     --c-founder-bg: #F1F5F9; --c-founder-text: #475569;
-    --c-prospect-bg: #F0FDF4; --c-prospect-text: #166534;
   }
   
   body { font-family: var(--font); background: #FAFAFA; color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
@@ -60,6 +59,14 @@
   }
   .btn-clear-link:hover { background: #FFFFFF !important; box-shadow: inset 0 0 0 1px var(--text-muted); }
 
+  .btn-network-action {
+    background: #FFFFFF; color: #3B4CCA; border: 1px solid #3B4CCA;
+    padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: var(--font);
+    font-size: 12px; font-weight: 600; transition: all 0.15s ease;
+    white-space: nowrap; justify-self: end;
+  }
+  .btn-network-action:hover { background: #3B4CCA; color: #FFFFFF; }
+
   /* Stats */
   .stats-bar { display: flex; gap: 20px; padding: 20px; justify-content: center; max-width: 800px; margin: 0 auto; }
   .stat-item { flex: 0 1 300px; background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 8px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); }
@@ -96,14 +103,14 @@
   .filter-badge { display: inline-flex; align-items: center; justify-content: center; background: #3B4CCA; color: white; font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; margin-left: 6px; }
   .filter-badge:empty { display: none; }
 
-  /* Table — 3 columns now (no Stage) */
+  /* Table — 4 columns */
   .table-wrap { padding: 16px 20px; margin: 0 20px; background: white; border-radius: 22px; border: 1px solid var(--border); }
-  .table-header { display: grid; grid-template-columns: 2fr 2fr 2fr; padding: 0 16px 8px; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .table-header { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 1fr; padding: 0 16px 8px; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
   .col-header { font-size: 11px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; }
   .investor-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 6px; cursor: pointer; transition: all 0.15s; }
   .investor-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-  .card-row { display: grid; grid-template-columns: 2fr 2fr 2fr; align-items: center; padding: 14px 16px; gap: 12px; }
-  .inv-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .card-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 1fr; align-items: center; padding: 14px 16px; gap: 12px; }
+  .inv-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
 
   /* Unified Bubble System */
   .bubble {
@@ -119,43 +126,30 @@
     margin-bottom: 4px;
   }
   .bubble-fund { background: var(--c-fund-bg); color: var(--c-fund-text); margin-left: -2px; }
-  .bubble-stage { background: var(--c-stage-bg); color: var(--c-stage-text); }
-  .bubble-prospect { background: var(--c-prospect-bg); color: var(--c-prospect-text); border: 1px solid #86efac; }
   .bubble-company { background: var(--c-company-bg); color: var(--c-company-text); }
+  .bubble-company-kontai { background: #DCFCE7; color: #166534; }
+  .bubble-company-condeo { background: #FFEDD5; color: #9A3412; }
+  .bubble-company-veterly { background: #DBEAFE; color: #1E40AF; }
+  .bubble-company-sencare { background: #F3E8FF; color: #6B21A8; }
+  .bubble-company-donux { background: #374151; color: #F9FAFB; }
+  .bubble-company-esgmax { background: #064E3B; color: #DCFCE7; }
+  .bubble-company-default { background: #FCE7F3; color: #9D174D; }
   .bubble-founder { background: var(--c-founder-bg); color: var(--c-founder-text); border: 1px solid var(--border); }
 
   .tags { display: flex; flex-wrap: wrap; gap: 2px; }
 
-  /* Detail panel — reworked */
+  /* Detail panel — 2 columns layout */
   .card-detail { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg); gap: 20px; }
-  .card-detail.open { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .card-detail.open { display: grid; grid-template-columns: 1.5fr 1fr; }
   .detail-block-label { font-size: 11px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; font-weight: 600; }
-  .detail-note { font-size: 13px; color: var(--text-muted); font-style: italic; }
+  .detail-note { font-size: 13px; color: var(--text-muted); }
 
-  /* Ticket block redesign */
-  .ticket-block { display: flex; flex-direction: column; gap: 8px; }
-  .ticket-entry {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .ticket-amount { font-size: 15px; font-weight: 600; color: var(--text); }
-  .ticket-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .ticket-stage-pill {
-    display: inline-flex; align-items: center; padding: 2px 8px;
-    border-radius: 20px; font-size: 10px; font-weight: 700;
-    background: var(--c-stage-bg); color: var(--c-stage-text);
-  }
-  .ticket-stage-pill.prospect {
-    background: var(--c-prospect-bg); color: var(--c-prospect-text); border: 1px solid #86efac;
-  }
-  .ticket-empty {
-    font-size: 13px; color: var(--text-faint); font-style: italic;
-  }
+  /* Ticket block — bullet list style */
+  .ticket-block { display: flex; flex-direction: column; gap: 4px; }
+  .ticket-line { font-size: 13px; color: var(--text); display: flex; align-items: baseline; gap: 6px; }
+  .ticket-line::before { content: '•'; color: var(--text-faint); flex-shrink: 0; }
+  .ticket-round { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .ticket-empty { font-size: 13px; color: var(--text-faint); font-style: italic; }
 
   /* Modal */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
@@ -167,6 +161,50 @@
   .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); outline: none; font-family: var(--font); font-size: 14px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+  /* Pagination Styles */
+  .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    margin-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .pagination-info {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .pagination-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-pagination {
+    background: #FFFFFF;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-pagination:hover:not(:disabled) {
+    background: var(--surface2);
+    border-color: var(--text);
+  }
+  .btn-pagination:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-faint);
+  }
 </style>
 </head>
 <body>
@@ -189,7 +227,7 @@
 <div class="filters">
   <div class="search-wrap">
     <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
-    <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="render()">
+    <input type="text" id="search" placeholder="Cerca investitore o fondo..." oninput="handleFilterChange()">
   </div>
 
   <div style="position: relative;">
@@ -210,11 +248,10 @@
           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
         <div class="filter-options-container">
-          <div class="filter-option"><span>Prospect</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Prospect" onchange="render()"></div>
-          <div class="filter-option"><span>Pre-seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Pre-seed" onchange="render()"></div>
-          <div class="filter-option"><span>Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Seed" onchange="render()"></div>
-          <div class="filter-option"><span>Post Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Post Seed" onchange="render()"></div>
-          <div class="filter-option"><span>Series A</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Series A" onchange="render()"></div>
+          <div class="filter-option"><span>Pre-seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Pre-seed" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Seed" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Post Seed</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Post Seed" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Series A</span><input type="checkbox" class="filter-checkbox f-stage-cb" value="Series A" onchange="handleFilterChange()"></div>
         </div>
       </div>
 
@@ -229,13 +266,13 @@
           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
         <div class="filter-options-container">
-          <div class="filter-option"><span>SB</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="SB" onchange="render()"></div>
-          <div class="filter-option"><span>Condeo</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Condeo" onchange="render()"></div>
-          <div class="filter-option"><span>Donux</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Donux" onchange="render()"></div>
-          <div class="filter-option"><span>ESGmax</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="ESGmax" onchange="render()"></div>
-          <div class="filter-option"><span>Kontai</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Kontai" onchange="render()"></div>
-          <div class="filter-option"><span>Sencare</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Sencare" onchange="render()"></div>
-          <div class="filter-option"><span>Veterly</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Veterly" onchange="render()"></div>
+          <div class="filter-option"><span>SB</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Startup Bakery" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Condeo</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Condeo" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Donux</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Donux" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>ESGmax</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="ESGmax" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Kontai</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Kontai" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Sencare</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Sencare" onchange="handleFilterChange()"></div>
+          <div class="filter-option"><span>Veterly</span><input type="checkbox" class="filter-checkbox f-sector-cb" value="Veterly" onchange="handleFilterChange()"></div>
         </div>
       </div>
 
@@ -247,42 +284,23 @@
   </div>
 </div>
 
-<!-- Table: 3 columns, no Stage -->
 <div class="table-wrap">
   <div class="table-header">
     <div class="col-header">Investitore</div>
     <div class="col-header">Società</div>
-    <div class="col-header">Founder network</div>
+    <div class="col-header">Contattato da</div>
   </div>
   <div id="list"></div>
+  <div id="pagination" class="pagination-container"></div>
 </div>
 
-<!-- Modal: no Società (from URL), no P.IVA obbligatorio, email+telefono, Stage con Prospect -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h3 style="margin-bottom:20px">Nuovo investitore</h3>
-    <div class="form-group">
-        <label class="form-label">Partita IVA</label>
-        <input class="form-input" id="f-piva" type="text" placeholder="Opzionale">
-    </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Investitore <span class="req">*</span></label><input class="form-input" id="f-inv-name" type="text" placeholder="Campo Obbligatorio"></div>
-      <div class="form-group"><label class="form-label">Fondo</label><input class="form-input" id="f-fund" type="text"></div>
+      <div class="form-group"><label class="form-label">Investitore <span class="req">*</span></label><input class="form-input" id="f-inv-name" type="text" placeholder="Nome Cognome"></div>
+      <div class="form-group"><label class="form-label">Società</label><input class="form-input" id="f-fund" type="text" placeholder="Es. Primo Ventures"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Stage <span class="req">*</span></label>
-        <select class="form-input" id="f-new-stage">
-            <option value="Prospect">Prospect</option>
-            <option value="Seed">Seed</option>
-            <option value="Pre-seed">Pre-seed</option>
-            <option value="Post Seed">Post Seed</option>
-            <option value="Series A">Series A</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Ticket medio</label><input class="form-input" id="f-ticket" type="text" placeholder="Es. 50000"></div>
-    </div>
-    <!-- Società: hidden, pre-filled from URL -->
     <input type="hidden" id="f-new-company" value="">
     <div class="form-row">
       <div class="form-group">
@@ -293,10 +311,6 @@
         <label class="form-label">Telefono</label>
         <input class="form-input" id="f-phone" type="tel" placeholder="+39 000 000 0000">
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Descrizione</label>
-      <textarea class="form-input" id="f-note" rows="4" style="resize: vertical; min-height: 80px;"></textarea>
     </div>
     <div class="modal-actions">
       <button class="btn-clear-link" onclick="closeModal()">Annulla</button>
@@ -312,7 +326,6 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxubmN4Zm5pZ2R6YXJ6eWZ3YWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDM5NTgsImV4cCI6MjA5MzUxOTk1OH0.tySF08HVUwGJ2wkLgA9vKKtZxLJ8agRdvgQW7qlA-t4';
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // ── URL params ──────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
 
   function formatFounderName(fullName) {
@@ -328,22 +341,34 @@
   const currentUser = formatFounderName(rawName);
   document.getElementById('current-user-display').textContent = currentUser;
 
-  // Company from URL (e.g. ?company=Startup%20Bakery → "SB" or raw value)
   const urlCompany = params.get('company') || '';
   document.getElementById('f-new-company').value = urlCompany;
 
-  // ── State ───────────────────────────────────────────────────
   let investors = [];
+  let currentPage = 1;
+  const ITEMS_PER_PAGE = 10;
 
-  // ── UI helpers ──────────────────────────────────────────────
+  window.handleFilterChange = () => {
+    currentPage = 1;
+    render();
+  };
+
+  window.changePage = (delta) => {
+    currentPage += delta;
+    render(true);
+  };
+
   window.toggleFilterMenu = (e) => { e?.stopPropagation(); document.getElementById('filter-menu').classList.toggle('open'); };
   window.toggleSection    = (el) => el.parentElement.classList.toggle('active');
   window.openModal        = () => document.getElementById('modal').classList.add('open');
   window.closeModal       = () => document.getElementById('modal').classList.remove('open');
-  window.clearAllFilters  = () => { document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false); render(); };
+  window.clearAllFilters  = () => { 
+    document.querySelectorAll('.filter-checkbox').forEach(c => c.checked = false); 
+    currentPage = 1;
+    render(); 
+  };
   window.addEventListener('click', () => document.getElementById('filter-menu').classList.remove('open'));
 
-  // ── Load ────────────────────────────────────────────────────
   async function loadInvestors() {
     const { data, error } = await supabase.from('investors').select('*').order('created_at', { ascending: false });
     if (!error) {
@@ -353,53 +378,67 @@
         company:  Array.isArray(row.company)  ? row.company  : (row.company  ? [row.company]  : []),
         founders: (Array.isArray(row.founders) ? row.founders : (row.founders ? [row.founders] : [])).map(f => formatFounderName(f)),
       }));
-      render();
+      render(true);
     }
   }
 
-  // ── Ticket renderer (new: amount + company + stage pill) ────
-  function renderTicketBlock(inv) {
-    // ticket string format: "€50.000 in Condeo, €20.000 in Sencare"
-    // stage array: ["Seed", "Prospect"]
-    const ticketStr = inv.ticket || '';
-    const tickets   = ticketStr.split(',').map(t => t.trim()).filter(Boolean);
+function renderTicketBlock(inv) {
+    const ticketStr  = inv.ticket || '';
+    const tickets    = ticketStr.split(',').map(t => t.trim()).filter(Boolean);
 
     if (tickets.length === 0) {
-      const isProspect = inv.stage.some(s => s === 'Prospect');
-      const companyList = inv.company.length > 0 ? inv.company.join(', ') : null;
-      return `<div class="ticket-block">
-        <div class="ticket-empty">Nessun investimento registrato</div>
-        ${isProspect ? `<span class="ticket-stage-pill prospect">Prospect — solo contatto${companyList ? ` · ${companyList}` : ''}</span>` : ''}
-      </div>`;
+      return `<div class="ticket-block"><div class="ticket-empty">Nessun investimento registrato</div></div>`;
     }
 
-    const stageLabel = inv.stage.length > 0 ? inv.stage[inv.stage.length - 1] : '';
-    const isProspect = stageLabel === 'Prospect';
+    // Prende l'ultimo stage che non è Prospect come label del round
+    const stages     = inv.stage.filter(s => s !== 'Prospect');
+    const roundLabel = stages.length > 0 ? stages[stages.length - 1] : '';
 
     return `<div class="ticket-block">
       ${tickets.map(t => {
         const inMatch = t.match(/^(.+?)\s+in\s+(.+)$/i);
         const amount  = inMatch ? inMatch[1] : t;
-        const company = inMatch ? inMatch[2] : '';
-        return `<div class="ticket-entry">
-          <div class="ticket-amount">${amount}</div>
-          <div class="ticket-meta">
-            ${company ? `<span>in <strong>${company}</strong></span>` : ''}
-            <span class="ticket-stage-pill ${isProspect ? 'prospect' : ''}">${stageLabel || '—'}</span>
-          </div>
-        </div>`;
+        const company = inMatch ? ` in <strong>${inMatch[2]}</strong>` : '';
+        const round   = roundLabel ? ` <span class="ticket-round">(${roundLabel})</span>` : '';
+        return `<div class="ticket-line">${amount}${company}${round}</div>`;
       }).join('')}
     </div>`;
-  }
+}
+  window.addToNetworkDirectly = async function (id, event) {
+    event.stopPropagation();
+    
+    const existing = investors.find(inv => inv.id === id);
+    if (!existing) return;
 
-  // ── Stage bubble helper ──────────────────────────────────────
-  function stageBubble(s) {
-    const cls = s === 'Prospect' ? 'bubble bubble-prospect' : 'bubble bubble-stage';
-    return `<span class="${cls}">${s}</span>`;
-  }
+    if (existing.founders.includes(currentUser) && (!urlCompany || existing.company.includes(urlCompany))) {
+      return;
+    }
 
-  // ── Render ──────────────────────────────────────────────────
-  window.render = function () {
+    const updatedFounders = Array.from(new Set([...(existing.founders || []), currentUser])).filter(Boolean);
+    const updatedCompany = urlCompany 
+      ? Array.from(new Set([...(existing.company || []), urlCompany])).filter(Boolean)
+      : existing.company;
+
+    const { error } = await supabase
+      .from('investors')
+      .update({
+        founders: updatedFounders,
+        company: updatedCompany
+      })
+      .eq('id', id);
+
+    if (!error) {
+      loadInvestors();
+    } else {
+      alert("Errore durante l'aggiornamento: " + error.message);
+    }
+  };
+
+  window.render = function (isNavigating = false) {
+    if (!isNavigating) {
+      currentPage = 1;
+    }
+
     const q               = document.getElementById('search').value.toLowerCase();
     const selectedStages  = Array.from(document.querySelectorAll('.f-stage-cb:checked')).map(cb => cb.value);
     const selectedCompany = Array.from(document.querySelectorAll('.f-sector-cb:checked')).map(cb => cb.value);
@@ -416,8 +455,23 @@
       return matchSearch && matchStage && matchCompany;
     });
 
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+    if (currentPage < 1) {
+      currentPage = 1;
+    }
+
+    const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIdx = startIdx + ITEMS_PER_PAGE;
+    const paginated = filtered.slice(startIdx, endIdx);
+
     const list = document.getElementById('list');
-    list.innerHTML = filtered.map(inv => `
+    list.innerHTML = paginated.map(inv => {
+      const isAlreadyInNetwork = inv.founders.includes(currentUser) && (!urlCompany || inv.company.includes(urlCompany));
+
+      return `
       <div class="investor-card" data-id="${inv.id}">
         <div class="card-row" onclick="this.parentElement.querySelector('.card-detail').classList.toggle('open')">
           <div>
@@ -425,16 +479,29 @@
             ${inv.fund ? `<span class="bubble bubble-fund">${inv.fund}</span>` : ''}
           </div>
           <div class="tags">
-            ${inv.company.map(c => `<span class="bubble bubble-company">${c}</span>`).join('')}
+            ${inv.company.map(c => {
+              const name = c.toLowerCase().trim();
+              const bubbleClass = ['kontai', 'condeo', 'veterly', 'sencare', 'donux', 'esgmax'].includes(name) 
+                ? `bubble-company-${name}` 
+                : 'bubble-company-default';
+              return `<span class="bubble bubble-company ${bubbleClass}">${c}</span>`;
+            }).join('') || '<span style="color:var(--text-faint);font-size:13px;">—</span>'}
           </div>
           <div class="tags">
             ${inv.founders.length > 0 ? inv.founders.map(f => `<span class="bubble bubble-founder">${f}</span>`).join('') : '—'}
           </div>
+          <div>
+            ${isAlreadyInNetwork ? '' : `
+              <button class="btn-network-action" onclick="addToNetworkDirectly('${inv.id}', event)">
+                + Network
+              </button>
+            `}
+          </div>
         </div>
         <div class="card-detail" onclick="event.stopPropagation()">
           <div class="detail-block">
-            <div class="detail-block-label">Descrizione</div>
-            <div class="detail-note">${inv.description || 'Nessuna nota'}</div>
+            <div class="detail-block-label">Investimento</div>
+            ${renderTicketBlock(inv)}
           </div>
           <div class="detail-block">
             <div class="detail-block-label">Contatti</div>
@@ -442,30 +509,46 @@
               ${inv.email ? `<span>📧 ${inv.email}</span>` : '<span style="color:var(--text-faint); font-style:italic;">Nessuna email</span>'}
               ${inv.phone ? `<span>📞 ${inv.phone}</span>` : '<span style="color:var(--text-faint); font-style:italic;">Nessun numero</span>'}
             </div>
-
-          </div>
-          <div class="detail-block">
-            <div class="detail-block-label">Investimento</div>
-            ${renderTicketBlock(inv)}
           </div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
+
+    const paginationEl = document.getElementById('pagination');
+    if (paginationEl) {
+      if (filtered.length === 0) {
+        paginationEl.innerHTML = '';
+      } else {
+        paginationEl.innerHTML = `
+          <div class="pagination-info">
+            Mostrati <strong>${startIdx + 1}-${Math.min(endIdx, filtered.length)}</strong> di <strong>${filtered.length}</strong> investitori
+          </div>
+          <div class="pagination-buttons">
+            <button class="btn-pagination" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(-1)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              Precedente
+            </button>
+            <button class="btn-pagination" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(1)">
+              Successivo
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        `;
+      }
+    }
   };
 
-  // ── Add investor ────────────────────────────────────────────
   window.addInvestor = async function () {
     const piva        = document.getElementById('f-piva').value.trim();
     const invName     = document.getElementById('f-inv-name').value.trim();
     const fund        = document.getElementById('f-fund').value.trim();
     const newStage    = document.getElementById('f-new-stage').value;
-    const newCompany  = document.getElementById('f-new-company').value; // from URL
+    const newCompany  = document.getElementById('f-new-company').value;
     const rawTicket   = document.getElementById('f-ticket').value.trim();
     const email       = document.getElementById('f-email').value.trim();
     const phone       = document.getElementById('f-phone').value.trim();
-    const description = document.getElementById('f-note').value;
 
-    // Validation: name + email required
     if (!invName) { alert("Inserisci il nome dell'investitore"); return; }
     if (!email)   { alert("Inserisci l'email (obbligatoria)");   return; }
 
@@ -478,15 +561,12 @@
       }
     }
 
-    // Try to find existing by p_iva (if provided) or by name+email
-    let existing = null;
-    if (piva) {
-      const { data } = await supabase.from('investors').select('*').eq('p_iva', piva).maybeSingle();
-      existing = data;
-    } else {
-      const { data } = await supabase.from('investors').select('*').ilike('name', invName).maybeSingle();
-      existing = data;
-    }
+    // ── LOGICA MODIFICATA: Ricerca record esistente basata su EMAIL ──
+    const { data: existing, error: fetchError } = await supabase
+      .from('investors')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
 
     if (existing) {
       const { error } = await supabase.from('investors').update({
@@ -497,10 +577,12 @@
                     ? `${existing.ticket}, ${formattedTicket}`
                     : (existing.ticket || formattedTicket),
         fund:     existing.fund || fund,
-        email:    existing.email || email,
+        name:     existing.name || invName, // aggiorna il nome se mancava
         phone:    existing.phone || phone,
+        p_iva:    existing.p_iva || (piva || null)
       }).eq('id', existing.id);
-      if (!error) { window.closeModal(); loadInvestors(); }
+      
+      if (!error) { window.closeModal(); currentPage = 1; loadInvestors(); }
       else         { alert("Errore aggiornamento: " + error.message); }
     } else {
       const { error } = await supabase.from('investors').insert([{
@@ -511,11 +593,11 @@
         company:     newCompany ? [newCompany] : [],
         ticket:      formattedTicket,
         founders:    [currentUser],
-        description: description,
+        description: "",
         email:       email,
         phone:       phone,
       }]);
-      if (!error) { window.closeModal(); loadInvestors(); }
+      if (!error) { window.closeModal(); currentPage = 1; loadInvestors(); }
       else         { alert("Errore inserimento: " + error.message); }
     }
   };
